@@ -1,0 +1,64 @@
+{
+  "name": "local-todo-app",
+  "version": "1.0.0",
+  "description": "A local todo list application",
+  "main": "src/main/main.js",
+  "scripts": {
+    "start": "electron .",
+    "server": "node src/server/server.js",
+    "dev": "concurrently \"npm run dev:renderer\" \"npm run server\" \"wait-on http://localhost:3000 && npm run dev:electron\"",
+    "dev:renderer": "webpack serve --mode development",
+    "dev:electron": "electron .",
+    "build": "webpack --mode production",
+    "dist": "npm run build && electron-builder",
+    "dist:win": "npm run build && electron-builder --win"
+  },
+  "build": {
+    "appId": "com.yourname.local-todo-app",
+    "productName": "Local Todo App",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "src/main/**/*",
+      "src/database/**/*",
+      "dist/**/*",
+      "node_modules/**/*"
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "public/icon.ico"
+    }
+  },
+  "keywords": [
+    "todo",
+    "electron",
+    "react",
+    "sqlite"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.28.0",
+    "@babel/preset-env": "^7.28.0",
+    "@babel/preset-react": "^7.27.1",
+    "babel-loader": "^10.0.0",
+    "concurrently": "^9.2.0",
+    "css-loader": "^7.1.2",
+    "electron": "^37.2.4",
+    "electron-builder": "^26.0.12",
+    "html-webpack-plugin": "^5.6.3",
+    "style-loader": "^4.0.0",
+    "wait-on": "^8.0.4",
+    "webpack": "^5.100.2",
+    "webpack-cli": "^6.0.1",
+    "webpack-dev-server": "^5.2.2"
+  }
+}
