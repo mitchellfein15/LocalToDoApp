@@ -10,7 +10,7 @@ class TodoController {
 
   // Get all todos
   static getAllTodos(req, res) {
-    const db = this.getDb();
+    const db = TodoController.getDb();
     
     db.all('SELECT * FROM todos ORDER BY created_at DESC', (err, rows) => {
       if (err) {
@@ -25,7 +25,7 @@ class TodoController {
 
   // Get single todo by ID
   static getTodoById(req, res) {
-    const db = this.getDb();
+    const db = TodoController.getDb();
     const { id } = req.params;
     
     db.get('SELECT * FROM todos WHERE id = ?', [id], (err, row) => {
@@ -45,7 +45,7 @@ class TodoController {
 
   // Create new todo
   static createTodo(req, res) {
-    const db = this.getDb();
+    const db = TodoController.getDb();
     const { title, description } = req.body;
     
     if (!title) {
@@ -77,7 +77,7 @@ class TodoController {
 
   // Update todo
   static updateTodo(req, res) {
-    const db = this.getDb();
+    const db = TodoController.getDb();
     const { id } = req.params;
     const { title, description } = req.body;
     
@@ -115,7 +115,7 @@ class TodoController {
 
   // Delete todo
   static deleteTodo(req, res) {
-    const db = this.getDb();
+    const db = TodoController.getDb();
     const { id } = req.params;
     
     db.run('DELETE FROM todos WHERE id = ?', [id], function(err) {
@@ -137,7 +137,7 @@ class TodoController {
 
   // Toggle todo completion
   static toggleTodo(req, res) {
-    const db = this.getDb();
+    const db = TodoController.getDb();
     const { id } = req.params;
     
     // First get the current todo

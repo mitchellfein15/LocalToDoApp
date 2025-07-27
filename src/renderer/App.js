@@ -1,10 +1,11 @@
 import React from 'react';
+import TodoList from './components/TodoList';
+import './App.css';
 
 function App() {
   return (
-    <div className="App" style={{ backgroundColor: 'blue', color: 'white'}}>
-      <h1>Local Todo App</h1>
-      <p>Welcome to your todo application!</p>
+    <div className="App">
+      <TodoList />
     </div>
   );
 }
