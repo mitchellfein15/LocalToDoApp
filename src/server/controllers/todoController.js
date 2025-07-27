@@ -1,7 +1,5 @@
 const sqlite3 = require('sqlite3').verbose();
-const path = require('path');
-
-const dbPath = path.join(__dirname, '../../database/todo.db');
+const { dbPath } = require('../../database/dbConfig');
 
 class TodoController {
   static getDb() {

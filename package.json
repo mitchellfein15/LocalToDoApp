@@ -21,6 +21,7 @@
     },
     "files": [
       "src/main/**/*",
+      "src/server/**/*",
       "src/database/**/*",
       "dist/**/*",
       "node_modules/**/*"
