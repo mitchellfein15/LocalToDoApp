@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Edit, Delete } from '@mui/icons-material';
 import './TodoItem.css';
 
 function TodoItem({ todo, onToggle, onDelete, onUpdate }) {
@@ -97,10 +98,10 @@ function TodoItem({ todo, onToggle, onDelete, onUpdate }) {
 
       <div className="todo-actions">
         <button onClick={handleEdit} className="edit-btn" title="Edit">
-          ✏️
+          <Edit />
         </button>
         <button onClick={handleDelete} className="delete-btn" title="Delete">
-          🗑️
+          <Delete />
         </button>
       </div>
     </div>

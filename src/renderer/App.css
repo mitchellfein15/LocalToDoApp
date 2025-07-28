@@ -12,19 +12,34 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: #f5f5f5;
   color: #333;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+[data-theme="dark"] body {
+  background-color: #1a1a1a;
+  color: #ffffff;
 }
 
 .App {
   min-height: 100vh;
   padding: 20px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background-color: #f5f5f5;
+  transition: background-color 0.3s ease;
+}
+
+[data-theme="dark"] .App {
+  background-color: #1a1a1a;
 }
 
 .loading {
   text-align: center;
   padding: 40px;
   font-size: 18px;
-  color: white;
+  color: #333;
+}
+
+[data-theme="dark"] .loading {
+  color: #ffffff;
 }
 
 .error-message {
@@ -54,6 +69,12 @@ body {
   background: white;
   border-radius: 12px;
   margin-top: 20px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+[data-theme="dark"] .empty-state {
+  color: #b0b0b0;
+  background: #2d2d2d;
 }
 
 .empty-state p {

@@ -1,0 +1,76 @@
+.settings-dialog {
+  --settings-bg: #ffffff;
+  --settings-text: #333333;
+  --settings-border: #e0e0e0;
+  --settings-hover: #f5f5f5;
+  --settings-divider: #e0e0e0;
+}
+
+[data-theme="dark"] .settings-dialog {
+  --settings-bg: #2d2d2d;
+  --settings-text: #ffffff;
+  --settings-border: #404040;
+  --settings-hover: #404040;
+  --settings-divider: #404040;
+}
+
+.settings-dialog .MuiDialog-paper {
+  background-color: var(--settings-bg) !important;
+  color: var(--settings-text) !important;
+}
+
+.settings-title {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  padding: 24px 24px 16px 24px !important;
+  border-bottom: 1px solid var(--settings-border) !important;
+}
+
+.settings-icon {
+  color: #1976d2 !important;
+}
+
+.settings-content {
+  padding: 24px !important;
+}
+
+.settings-section {
+  margin-bottom: 24px;
+}
+
+.settings-section:last-child {
+  margin-bottom: 0;
+}
+
+.section-title {
+  margin-bottom: 16px !important;
+  color: var(--settings-text) !important;
+}
+
+.theme-toggle {
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 12px 0 !important;
+}
+
+.theme-toggle .MuiFormControlLabel-label {
+  width: 100% !important;
+  margin-left: 12px !important;
+}
+
+.theme-toggle-label {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  width: 100% !important;
+}
+
+.theme-toggle-label .MuiSvgIcon-root {
+  color: #1976d2 !important;
+}
+
+.settings-divider {
+  margin: 24px 0 !important;
+  background-color: var(--settings-divider) !important;
+} 

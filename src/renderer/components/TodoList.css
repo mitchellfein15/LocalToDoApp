@@ -5,14 +5,31 @@
   border-radius: 16px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   overflow: hidden;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+[data-theme="dark"] .todo-list {
+  background: #2d2d2d;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
 .todo-header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: lightgrey;
+  color: black;
   padding: 30px;
   display: flex;
   justify-content: space-between;
+  align-items: center;
+}
+
+[data-theme="dark"] .todo-header {
+  background: rgb(57, 57, 57);
+  color: white;
+}
+
+.header-actions {
+  display: flex;
+  gap: 12px;
   align-items: center;
 }
 
@@ -22,9 +39,50 @@
   margin: 0;
 }
 
-.add-todo-btn {
-  background: rgba(255, 255, 255, 0.2);
+.settings-btn {
+  background: rgba(125, 125, 125, 0.2);
+  color: black;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  padding: 12px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+}
+
+.settings-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px);
+}
+
+[data-theme="dark"] .settings-btn {
   color: white;
+}
+
+[data-theme="dark"] .settings-btn:hover {
+  color: black;
+}
+
+[data-theme="dark"] .add-todo-btn {
+  color: white;
+}
+
+[data-theme="dark"] .add-todo-btn:hover {
+  color: black;
+}
+
+.settings-btn .MuiSvgIcon-root {
+  font-size: 20px;
+}
+
+.add-todo-btn {
+  background: rgba(125, 125, 125, 0.2);
+  color: black;
   border: 2px solid rgba(255, 255, 255, 0.3);
   padding: 12px 24px;
   border-radius: 25px;
@@ -44,6 +102,11 @@
   padding: 20px;
   max-height: 500px;
   overflow-y: auto;
+  transition: background-color 0.3s ease;
+}
+
+[data-theme="dark"] .todos-container {
+  background-color: #2d2d2d;
 }
 
 .todos-container::-webkit-scrollbar {

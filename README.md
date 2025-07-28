@@ -13,10 +13,6 @@ A beautiful, locally-running todo list application built with Electron, React, a
 -  **Cross-platform (Windows, Mac, Linux)**
 -  **No internet connection required**
 
-## Screenshots
-
-*Coming soon - beautiful gradient UI with todo cards*
-
 ## Tech Stack
 
 - **Frontend:** React 18 with modern CSS
@@ -36,7 +32,7 @@ A beautiful, locally-running todo list application built with Electron, React, a
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/local-todo-app.git
+   git clone https://github.com/mitchellfein15/LocalToDoApp.git
    cd local-todo-app
    ```
 
@@ -164,7 +160,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 If you encounter any issues or have questions:
 
-1. Check the [Issues](https://github.com/yourusername/local-todo-app/issues) page
+1. Check the [Issues](https://github.com/mitchellfein15/LocalToDoApp.git) page
 2. Create a new issue with details about your problem
 3. Include your operating system and Node.js version
 
