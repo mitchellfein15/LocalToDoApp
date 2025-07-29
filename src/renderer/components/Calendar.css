@@ -159,7 +159,7 @@
 }
 
 [data-theme="dark"] .calendar-day.overdue {
-  background: #891818;
+  background: #2d2d2d;
 }
 
 .day-header {

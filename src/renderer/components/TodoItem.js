@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Edit, Delete } from '@mui/icons-material';
+import { Edit, Delete } from '../utils/mui-imports';
 import './TodoItem.css';
 
 function TodoItem({ todo, onToggle, onDelete, onUpdate }) {

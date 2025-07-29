@@ -8,13 +8,11 @@ import {
   FormControlLabel, 
   Typography,
   Box,
-  Divider
-} from '@mui/material';
-import { 
+  Divider,
   DarkMode, 
   LightMode, 
-  Settings as SettingsIcon 
-} from '@mui/icons-material';
+  SettingsIcon
+} from '../utils/mui-imports';
 import './Settings.css';
 
 function Settings({ open, onClose }) {

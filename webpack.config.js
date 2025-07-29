@@ -5,7 +5,36 @@ module.exports = {
   entry: './src/renderer/index.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js',
+    filename: '[name].js', // Use chunk names instead of fixed bundle.js
+    chunkFilename: '[name].[chunkhash].js', // For dynamic chunks
+  },
+  // Add performance configuration to handle large bundles
+  performance: {
+    hints: false, // Disable warnings for Electron apps
+    maxEntrypointSize: 512000, // 500 KiB
+    maxAssetSize: 512000 // 500 KiB
+  },
+  // Add optimization settings
+  optimization: {
+    usedExports: true, // Enable tree shaking
+    sideEffects: false, // Assume all modules are side-effect free
+    splitChunks: {
+      chunks: 'all',
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          chunks: 'all',
+          priority: 5,
+        },
+        mui: {
+          test: /[\\/]node_modules[\\/]@mui[\\/]/,
+          name: 'mui',
+          chunks: 'all',
+          priority: 10,
+        }
+      }
+    }
   },
   module: {
     rules: [

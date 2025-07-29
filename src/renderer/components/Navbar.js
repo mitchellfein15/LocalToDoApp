@@ -1,5 +1,5 @@
 import React from 'react';
-import { Settings as SettingsIcon } from '@mui/icons-material';
+import { SettingsIcon } from '../utils/mui-imports';
 import './Navbar.css';
 
 function Navbar({ activeTab, onTabChange, onSettingsClick }) {
