@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import TodoItem from './TodoItem';
 import ApiService from '../services/api';
 import './Calendar.css';
 
@@ -28,7 +27,10 @@ function Calendar({ onToggle, onDelete, onUpdate }) {
   };
 
   const getTodosForDate = (date) => {
-    const dateString = date.toISOString().split('T')[0];
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const dateString = `${year}-${month}-${day}`;
     return todos.filter(todo => 
       todo.due_date && todo.due_date === dateString
     );
@@ -69,9 +71,27 @@ function Calendar({ onToggle, onDelete, onUpdate }) {
     return date.toDateString() === today.toDateString();
   };
 
-  const isOverdue = (date) => {
+  const isOverdue = (dueDate) => {
+    if (!dueDate) return false;
+    
+    // If it's a date-only string (YYYY-MM-DD), parse it as local date
+    if (dueDate.match(/^\d{4}-\d{2}-\d{2}$/)) {
+      const [year, month, day] = dueDate.split('-');
+      const dueDateObj = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+      
+      const today = new Date();
+      const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+      const dueStart = new Date(dueDateObj.getFullYear(), dueDateObj.getMonth(), dueDateObj.getDate());
+      
+      return dueStart < todayStart;
+    }
+    
+    // For other date formats, use the original method
     const today = new Date();
-    return date < today;
+    const due = new Date(dueDate);
+    const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const dueStart = new Date(due.getFullYear(), due.getMonth(), due.getDate());
+    return dueStart < todayStart;
   };
 
   if (loading) {
@@ -96,7 +116,7 @@ function Calendar({ onToggle, onDelete, onUpdate }) {
     days.push(
       <div 
         key={day} 
-        className={`calendar-day ${isToday(date) ? 'today' : ''} ${isOverdue(date) ? 'overdue' : ''}`}
+        className={`calendar-day ${isToday(date) ? 'today' : ''}`}
       >
         <div className="day-header">
           <span className="day-number">{day}</span>
@@ -106,13 +126,15 @@ function Calendar({ onToggle, onDelete, onUpdate }) {
         </div>
         <div className="day-todos">
           {todosForDay.map(todo => (
-            <div key={todo.id} className="calendar-todo-item">
-              <TodoItem
-                todo={todo}
-                onToggle={onToggle}
-                onDelete={onDelete}
-                onUpdate={onUpdate}
-              />
+            <div key={todo.id} className="calendar-todo-simple">
+              <div className="todo-simple-content">
+                <span className={`todo-simple-title ${todo.completed ? 'completed' : ''}`}>
+                  {todo.title}
+                </span>
+                {isOverdue(todo.due_date) && !todo.completed && (
+                  <span className="todo-overdue-indicator">Overdue</span>
+                )}
+              </div>
             </div>
           ))}
         </div>

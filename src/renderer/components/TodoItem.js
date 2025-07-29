@@ -41,12 +41,39 @@ function TodoItem({ todo, onToggle, onDelete, onUpdate }) {
   };
 
   const formatDate = (dateString) => {
+    if (!dateString) return '';
+    
+    // If it's a date-only string (YYYY-MM-DD), parse it as local date
+    if (dateString.match(/^\d{4}-\d{2}-\d{2}$/)) {
+      const [year, month, day] = dateString.split('-');
+      return new Date(parseInt(year), parseInt(month) - 1, parseInt(day)).toLocaleDateString();
+    }
+    
+    // For datetime strings, use the original method
     return new Date(dateString).toLocaleDateString();
   };
 
   const isOverdue = (dueDate) => {
     if (!dueDate) return false;
-    return new Date(dueDate) < new Date() && !todo.completed;
+    
+    // If it's a date-only string (YYYY-MM-DD), parse it as local date
+    if (dueDate.match(/^\d{4}-\d{2}-\d{2}$/)) {
+      const [year, month, day] = dueDate.split('-');
+      const dueDateObj = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+      
+      const today = new Date();
+      const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+      const dueStart = new Date(dueDateObj.getFullYear(), dueDateObj.getMonth(), dueDateObj.getDate());
+      
+      return dueStart < todayStart && !todo.completed;
+    }
+    
+    // For other date formats, use the original method
+    const today = new Date();
+    const due = new Date(dueDate);
+    const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const dueStart = new Date(due.getFullYear(), due.getMonth(), due.getDate());
+    return dueStart < todayStart && !todo.completed;
   };
 
   if (isEditing) {
@@ -71,7 +98,13 @@ function TodoItem({ todo, onToggle, onDelete, onUpdate }) {
             value={editDueDate}
             onChange={(e) => setEditDueDate(e.target.value)}
             className="edit-due-date"
-            min={new Date().toISOString().split('T')[0]}
+            min={(() => {
+              const today = new Date();
+              const year = today.getFullYear();
+              const month = String(today.getMonth() + 1).padStart(2, '0');
+              const day = String(today.getDate()).padStart(2, '0');
+              return `${year}-${month}-${day}`;
+            })()}
           />
           <div className="edit-actions">
             <button onClick={handleSave} className="save-btn">Save</button>
