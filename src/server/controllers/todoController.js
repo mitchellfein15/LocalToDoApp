@@ -44,15 +44,15 @@ class TodoController {
   // Create new todo
   static createTodo(req, res) {
     const db = TodoController.getDb();
-    const { title, description } = req.body;
+    const { title, description, due_date } = req.body;
     
     if (!title) {
       res.status(400).json({ error: 'Title is required' });
       return;
     }
     
-    const sql = 'INSERT INTO todos (title, description) VALUES (?, ?)';
-    const params = [title, description || ''];
+    const sql = 'INSERT INTO todos (title, description, due_date) VALUES (?, ?, ?)';
+    const params = [title, description || '', due_date || null];
     
     db.run(sql, params, function(err) {
       if (err) {
@@ -77,15 +77,15 @@ class TodoController {
   static updateTodo(req, res) {
     const db = TodoController.getDb();
     const { id } = req.params;
-    const { title, description } = req.body;
+    const { title, description, due_date } = req.body;
     
     if (!title) {
       res.status(400).json({ error: 'Title is required' });
       return;
     }
     
-    const sql = 'UPDATE todos SET title = ?, description = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?';
-    const params = [title, description || '', id];
+    const sql = 'UPDATE todos SET title = ?, description = ?, due_date = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?';
+    const params = [title, description || '', due_date || null, id];
     
     db.run(sql, params, function(err) {
       if (err) {

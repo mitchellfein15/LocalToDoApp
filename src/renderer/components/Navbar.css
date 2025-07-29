@@ -1,0 +1,149 @@
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  background: white;
+  border-bottom: 1px solid #e1e5e9;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+[data-theme="dark"] .navbar {
+  background: #2d2d2d;
+  border-bottom: 1px solid #555;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.nav-brand h1 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: #2c3e50;
+}
+
+[data-theme="dark"] .nav-brand h1 {
+  color: #ffffff;
+}
+
+.nav-tabs {
+  display: flex;
+  gap: 8px;
+}
+
+.nav-tab {
+  padding: 12px 24px;
+  border: none;
+  background: transparent;
+  color: #6c757d;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.nav-tab:hover {
+  background: #f8f9fa;
+  color: #495057;
+}
+
+[data-theme="dark"] .nav-tab {
+  color: #b0b0b0;
+}
+
+[data-theme="dark"] .nav-tab:hover {
+  background: #404040;
+  color: #ffffff;
+}
+
+.nav-tab.active {
+  background: #667eea;
+  color: white;
+  font-weight: 600;
+}
+
+[data-theme="dark"] .nav-tab.active {
+  background: #1976d2;
+}
+
+.nav-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid #667eea;
+}
+
+[data-theme="dark"] .nav-tab.active::after {
+  border-bottom-color: #1976d2;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+}
+
+.settings-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+}
+
+.settings-btn:hover {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+[data-theme="dark"] .settings-btn {
+  color: #b0b0b0;
+}
+
+[data-theme="dark"] .settings-btn:hover {
+  background: #1a237e;
+  color: #64b5f6;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 12px 16px;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .nav-brand h1 {
+    font-size: 20px;
+  }
+  
+  .nav-tabs {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .nav-tab {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+  
+  .nav-actions {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+  }
+}

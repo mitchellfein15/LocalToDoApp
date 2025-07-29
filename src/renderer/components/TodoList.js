@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import TodoItem from './TodoItem';
 import TodoForm from './TodoForm';
-import Settings from './Settings';
 import ApiService from '../services/api';
-import { Settings as SettingsIcon } from '@mui/icons-material';
 import './TodoList.css';
 
 function TodoList() {
@@ -11,7 +9,6 @@ function TodoList() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showForm, setShowForm] = useState(false);
-  const [showSettings, setShowSettings] = useState(false);
 
   // Load todos on component mount
   useEffect(() => {
@@ -84,15 +81,7 @@ function TodoList() {
   return (
     <div className="todo-list">
       <div className="todo-header">
-        <h1>Local Todo App</h1>
         <div className="header-actions">
-          <button 
-            className="settings-btn"
-            onClick={() => setShowSettings(true)}
-            title="Settings"
-          >
-            <SettingsIcon />
-          </button>
           <button 
             className="add-todo-btn"
             onClick={() => setShowForm(!showForm)}
@@ -133,11 +122,6 @@ function TodoList() {
           ))
         )}
       </div>
-      
-      <Settings 
-        open={showSettings}
-        onClose={() => setShowSettings(false)}
-      />
     </div>
   );
 }

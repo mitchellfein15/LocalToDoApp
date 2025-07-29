@@ -1,0 +1,288 @@
+.calendar {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.calendar-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.nav-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 6px;
+  color: #6c757d;
+  transition: all 0.2s ease;
+}
+
+.nav-btn:hover {
+  background: #f8f9fa;
+  color: #495057;
+}
+
+[data-theme="dark"] .nav-btn {
+  color: #b0b0b0;
+}
+
+[data-theme="dark"] .nav-btn:hover {
+  background: #404040;
+  color: #ffffff;
+}
+
+.current-month {
+  font-size: 24px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0;
+}
+
+[data-theme="dark"] .current-month {
+  color: #ffffff;
+}
+
+.today-btn {
+  background: #667eea;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.today-btn:hover {
+  background: #5a6fd8;
+  transform: translateY(-1px);
+}
+
+[data-theme="dark"] .today-btn {
+  background: #1976d2;
+}
+
+[data-theme="dark"] .today-btn:hover {
+  background: #1565c0;
+}
+
+.calendar-grid {
+  background: white;
+  border: 1px solid #e1e5e9;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+[data-theme="dark"] .calendar-grid {
+  background: #404040;
+  border: 1px solid #555;
+}
+
+.calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  background: #f8f9fa;
+  border-bottom: 1px solid #e1e5e9;
+}
+
+[data-theme="dark"] .calendar-weekdays {
+  background: #2d2d2d;
+  border-bottom: 1px solid #555;
+}
+
+.weekday {
+  padding: 16px 8px;
+  text-align: center;
+  font-weight: 600;
+  color: #6c757d;
+  font-size: 14px;
+}
+
+[data-theme="dark"] .weekday {
+  color: #b0b0b0;
+}
+
+.calendar-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.calendar-day {
+  min-height: 120px;
+  border-right: 1px solid #e1e5e9;
+  border-bottom: 1px solid #e1e5e9;
+  padding: 8px;
+  position: relative;
+  background: white;
+}
+
+[data-theme="dark"] .calendar-day {
+  border-right: 1px solid #555;
+  border-bottom: 1px solid #555;
+  background: #404040;
+}
+
+.calendar-day:nth-child(7n) {
+  border-right: none;
+}
+
+.calendar-day.empty {
+  background: #f8f9fa;
+}
+
+[data-theme="dark"] .calendar-day.empty {
+  background: #2d2d2d;
+}
+
+.calendar-day.today {
+  background: #e3f2fd;
+}
+
+[data-theme="dark"] .calendar-day.today {
+  background: #1a237e;
+}
+
+.calendar-day.overdue {
+  background: #ffebee;
+}
+
+[data-theme="dark"] .calendar-day.overdue {
+  background: #891818;
+}
+
+.day-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.day-number {
+  font-weight: 600;
+  color: #2c3e50;
+  font-size: 14px;
+}
+
+[data-theme="dark"] .day-number {
+  color: #ffffff;
+}
+
+.todo-count {
+  background: #667eea;
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+[data-theme="dark"] .todo-count {
+  background: #1976d2;
+}
+
+.day-todos {
+  max-height: 80px;
+  overflow-y: auto;
+}
+
+.calendar-todo-item {
+  margin-bottom: 4px;
+}
+
+.calendar-todo-item .todo-item {
+  padding: 8px;
+  margin-bottom: 4px;
+  font-size: 12px;
+}
+
+.calendar-todo-item .todo-title {
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+
+.calendar-todo-item .todo-description {
+  font-size: 10px;
+  margin-bottom: 4px;
+}
+
+.calendar-todo-item .todo-meta {
+  font-size: 10px;
+  gap: 8px;
+}
+
+.calendar-todo-item .todo-actions {
+  gap: 4px;
+}
+
+.calendar-todo-item .edit-btn,
+.calendar-todo-item .delete-btn {
+  padding: 4px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .calendar {
+    padding: 12px;
+  }
+  
+  .calendar-header {
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
+  }
+  
+  .calendar-controls {
+    justify-content: center;
+  }
+  
+  .current-month {
+    font-size: 20px;
+  }
+  
+  .calendar-day {
+    min-height: 80px;
+    padding: 4px;
+  }
+  
+  .day-number {
+    font-size: 12px;
+  }
+  
+  .todo-count {
+    width: 16px;
+    height: 16px;
+    font-size: 10px;
+  }
+  
+  .calendar-todo-item .todo-item {
+    padding: 4px;
+  }
+  
+  .calendar-todo-item .todo-title {
+    font-size: 10px;
+  }
+  
+  .calendar-todo-item .todo-description {
+    font-size: 8px;
+  }
+  
+  .calendar-todo-item .todo-meta {
+    font-size: 8px;
+  }
+}

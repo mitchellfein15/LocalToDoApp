@@ -6,6 +6,7 @@ function TodoItem({ todo, onToggle, onDelete, onUpdate }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(todo.title);
   const [editDescription, setEditDescription] = useState(todo.description || '');
+  const [editDueDate, setEditDueDate] = useState(todo.due_date || '');
 
   const handleToggle = () => {
     onToggle(todo.id);
@@ -25,7 +26,8 @@ function TodoItem({ todo, onToggle, onDelete, onUpdate }) {
     if (editTitle.trim()) {
       onUpdate(todo.id, {
         title: editTitle.trim(),
-        description: editDescription.trim()
+        description: editDescription.trim(),
+        due_date: editDueDate || null
       });
       setIsEditing(false);
     }
@@ -34,11 +36,17 @@ function TodoItem({ todo, onToggle, onDelete, onUpdate }) {
   const handleCancel = () => {
     setEditTitle(todo.title);
     setEditDescription(todo.description || '');
+    setEditDueDate(todo.due_date || '');
     setIsEditing(false);
   };
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString();
+  };
+
+  const isOverdue = (dueDate) => {
+    if (!dueDate) return false;
+    return new Date(dueDate) < new Date() && !todo.completed;
   };
 
   if (isEditing) {
@@ -57,6 +65,13 @@ function TodoItem({ todo, onToggle, onDelete, onUpdate }) {
             onChange={(e) => setEditDescription(e.target.value)}
             placeholder="Description (optional)"
             className="edit-description"
+          />
+          <input
+            type="date"
+            value={editDueDate}
+            onChange={(e) => setEditDueDate(e.target.value)}
+            className="edit-due-date"
+            min={new Date().toISOString().split('T')[0]}
           />
           <div className="edit-actions">
             <button onClick={handleSave} className="save-btn">Save</button>
@@ -87,6 +102,12 @@ function TodoItem({ todo, onToggle, onDelete, onUpdate }) {
             <span className="todo-date">
               Created: {formatDate(todo.created_at)}
             </span>
+            {todo.due_date && (
+              <span className={`todo-due-date ${isOverdue(todo.due_date) ? 'overdue' : ''}`}>
+                Due: {formatDate(todo.due_date)}
+                {isOverdue(todo.due_date) && <span className="overdue-indicator"> (Overdue)</span>}
+              </span>
+            )}
             {todo.updated_at !== todo.created_at && (
               <span className="todo-updated">
                 Updated: {formatDate(todo.updated_at)}
