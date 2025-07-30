@@ -9,6 +9,8 @@
   position: sticky;
   top: 0;
   z-index: 100;
+  flex-wrap: wrap;
+  gap: 16px;
 }
 
 [data-theme="dark"] .navbar {
@@ -22,6 +24,7 @@
   font-size: 24px;
   font-weight: 700;
   color: #2c3e50;
+  white-space: nowrap;
 }
 
 [data-theme="dark"] .nav-brand h1 {
@@ -31,6 +34,7 @@
 .nav-tabs {
   display: flex;
   gap: 8px;
+  flex-wrap: wrap;
 }
 
 .nav-tab {
@@ -44,6 +48,7 @@
   border-radius: 8px;
   transition: all 0.2s ease;
   position: relative;
+  white-space: nowrap;
 }
 
 .nav-tab:hover {
@@ -90,6 +95,7 @@
 .nav-actions {
   display: flex;
   align-items: center;
+  flex-shrink: 0;
 }
 
 .settings-btn {
@@ -103,6 +109,8 @@
   align-items: center;
   justify-content: center;
   color: #666;
+  min-width: 40px;
+  height: 40px;
 }
 
 .settings-btn:hover {
@@ -120,11 +128,31 @@
 }
 
 /* Responsive design */
+@media (max-width: 1024px) {
+  .navbar {
+    padding: 14px 20px;
+  }
+  
+  .nav-brand h1 {
+    font-size: 22px;
+  }
+  
+  .nav-tab {
+    padding: 10px 20px;
+    font-size: 15px;
+  }
+}
+
 @media (max-width: 768px) {
   .navbar {
     padding: 12px 16px;
     flex-direction: column;
-    gap: 16px;
+    gap: 12px;
+    align-items: stretch;
+  }
+  
+  .nav-brand {
+    text-align: center;
   }
   
   .nav-brand h1 {
@@ -134,16 +162,88 @@
   .nav-tabs {
     width: 100%;
     justify-content: center;
+    gap: 6px;
   }
   
   .nav-tab {
-    padding: 10px 20px;
+    padding: 10px 16px;
     font-size: 14px;
+    flex: 1;
+    max-width: 120px;
+  }
+  
+  .nav-tab.active::after {
+    display: none;
   }
   
   .nav-actions {
     position: absolute;
     top: 12px;
     right: 16px;
+  }
+  
+  .settings-btn {
+    min-width: 36px;
+    height: 36px;
+    padding: 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar {
+    padding: 10px 12px;
+    gap: 10px;
+  }
+  
+  .nav-brand h1 {
+    font-size: 18px;
+  }
+  
+  .nav-tabs {
+    gap: 4px;
+  }
+  
+  .nav-tab {
+    padding: 8px 12px;
+    font-size: 13px;
+    max-width: 100px;
+  }
+  
+  .nav-actions {
+    top: 10px;
+    right: 12px;
+  }
+  
+  .settings-btn {
+    min-width: 32px;
+    height: 32px;
+    padding: 4px;
+  }
+}
+
+@media (max-width: 360px) {
+  .navbar {
+    padding: 8px 10px;
+  }
+  
+  .nav-brand h1 {
+    font-size: 16px;
+  }
+  
+  .nav-tab {
+    padding: 6px 8px;
+    font-size: 12px;
+    max-width: 80px;
+  }
+  
+  .nav-actions {
+    top: 8px;
+    right: 10px;
+  }
+  
+  .settings-btn {
+    min-width: 28px;
+    height: 28px;
+    padding: 3px;
   }
 }
