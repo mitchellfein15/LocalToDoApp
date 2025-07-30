@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ApiService from '../services/api';
 import './Calendar.css';
 
-function Calendar({ onToggle, onDelete, onUpdate }) {
+function Calendar({ onToggle, onDelete, onUpdate, onShowDetails }) {
   const [todos, setTodos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -23,6 +23,52 @@ function Calendar({ onToggle, onDelete, onUpdate }) {
       console.error('Error loading todos:', err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleToggleTodo = async (id) => {
+    try {
+      const updatedTodo = await ApiService.toggleTodo(id);
+      setTodos(todos.map(todo => 
+        todo.id === id ? updatedTodo : todo
+      ));
+      // Call the parent handler if provided
+      if (onToggle) {
+        onToggle(id);
+      }
+    } catch (err) {
+      setError('Failed to update todo');
+      console.error('Error updating todo:', err);
+    }
+  };
+
+  const handleDeleteTodo = async (id) => {
+    try {
+      await ApiService.deleteTodo(id);
+      setTodos(todos.filter(todo => todo.id !== id));
+      // Call the parent handler if provided
+      if (onDelete) {
+        onDelete(id);
+      }
+    } catch (err) {
+      setError('Failed to delete todo');
+      console.error('Error deleting todo:', err);
+    }
+  };
+
+  const handleUpdateTodo = async (id, todoData) => {
+    try {
+      const updatedTodo = await ApiService.updateTodo(id, todoData);
+      setTodos(todos.map(todo => 
+        todo.id === id ? updatedTodo : todo
+      ));
+      // Call the parent handler if provided
+      if (onUpdate) {
+        onUpdate(id, todoData);
+      }
+    } catch (err) {
+      setError('Failed to update todo');
+      console.error('Error updating todo:', err);
     }
   };
 
@@ -126,7 +172,11 @@ function Calendar({ onToggle, onDelete, onUpdate }) {
         </div>
         <div className="day-todos">
           {todosForDay.map(todo => (
-            <div key={todo.id} className="calendar-todo-simple">
+            <div 
+              key={todo.id} 
+              className="calendar-todo-simple"
+              onClick={() => onShowDetails && onShowDetails(todo)}
+            >
               <div className="todo-simple-content">
                 <span className={`todo-simple-title ${todo.completed ? 'completed' : ''}`}>
                   {todo.title}

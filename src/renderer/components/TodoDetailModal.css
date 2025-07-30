@@ -1,0 +1,207 @@
+.todo-detail-modal .MuiDialog-paper {
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  background-color: #ffffff;
+  transition: background-color 0.3s ease;
+}
+
+[data-theme="dark"] .todo-detail-modal .MuiDialog-paper {
+  background-color: #2d2d2d;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.modal-title {
+  padding: 24px 24px 16px 24px !important;
+  border-bottom: 1px solid #e0e0e0;
+  transition: border-color 0.3s ease;
+}
+
+[data-theme="dark"] .modal-title {
+  border-bottom-color: #404040;
+}
+
+.modal-title h2 {
+  font-weight: 600;
+  color: #333;
+  transition: color 0.3s ease;
+}
+
+[data-theme="dark"] .modal-title h2 {
+  color: #ffffff;
+}
+
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 16px;
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.modal-content {
+  padding: 24px !important;
+}
+
+.todo-detail-section {
+  margin-bottom: 20px;
+}
+
+.todo-detail-section:last-child {
+  margin-bottom: 0;
+}
+
+.section-title {
+  font-weight: 600;
+  color: #666;
+  margin-bottom: 8px;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: color 0.3s ease;
+}
+
+[data-theme="dark"] .section-title {
+  color: #b0b0b0;
+}
+
+.todo-title {
+  font-size: 18px;
+  font-weight: 500;
+  color: #333;
+  line-height: 1.4;
+  transition: color 0.3s ease;
+}
+
+[data-theme="dark"] .todo-title {
+  color: #ffffff;
+}
+
+.todo-title.completed {
+  text-decoration: line-through;
+  color: #888;
+}
+
+[data-theme="dark"] .todo-title.completed {
+  color: #666;
+}
+
+.todo-description {
+  color: #555;
+  line-height: 1.6;
+  font-size: 16px;
+  transition: color 0.3s ease;
+}
+
+[data-theme="dark"] .todo-description {
+  color: #cccccc;
+}
+
+.todo-due-date {
+  color: #333;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+[data-theme="dark"] .todo-due-date {
+  color: #ffffff;
+}
+
+.todo-due-date.overdue {
+  color: #f44336;
+  font-weight: 600;
+}
+
+.overdue-indicator {
+  color: #f44336;
+  font-weight: 600;
+}
+
+.todo-date {
+  color: #666;
+  font-size: 14px;
+  transition: color 0.3s ease;
+}
+
+[data-theme="dark"] .todo-date {
+  color: #b0b0b0;
+}
+
+.section-divider {
+  margin: 20px 0 !important;
+  background-color: #e0e0e0;
+  transition: background-color 0.3s ease;
+}
+
+[data-theme="dark"] .section-divider {
+  background-color: #404040;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 120px;
+}
+
+.toggle-btn {
+  background-color: #2196f3;
+  color: white;
+}
+
+.toggle-btn:hover {
+  background-color: #1976d2;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+}
+
+.toggle-btn.completed {
+  background-color: #ff9800;
+}
+
+.toggle-btn.completed:hover {
+  background-color: #f57c00;
+  box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3);
+}
+
+.delete-btn {
+  background-color: #f44336;
+  color: white;
+}
+
+.delete-btn:hover {
+  background-color: #d32f2f;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3);
+}
+
+/* Responsive design */
+@media (max-width: 600px) {
+  .modal-title {
+    padding: 20px 20px 12px 20px !important;
+  }
+  
+  .modal-content {
+    padding: 20px !important;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+  }
+  
+  .action-btn {
+    width: 100%;
+    min-width: auto;
+  }
+} 

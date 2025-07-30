@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Edit, Delete } from '../utils/mui-imports';
 import './TodoItem.css';
 
-function TodoItem({ todo, onToggle, onDelete, onUpdate }) {
+function TodoItem({ todo, onToggle, onDelete, onUpdate, onShowDetails }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(todo.title);
   const [editDescription, setEditDescription] = useState(todo.description || '');
@@ -117,8 +117,8 @@ function TodoItem({ todo, onToggle, onDelete, onUpdate }) {
 
   return (
     <div className={`todo-item ${todo.completed ? 'completed' : ''}`}>
-      <div className="todo-content">
-        <div className="todo-checkbox">
+      <div className="todo-content" onClick={() => onShowDetails && onShowDetails(todo)}>
+        <div className="todo-checkbox" onClick={(e) => e.stopPropagation()}>
           <input
             type="checkbox"
             checked={todo.completed}
@@ -151,10 +151,10 @@ function TodoItem({ todo, onToggle, onDelete, onUpdate }) {
       </div>
 
       <div className="todo-actions">
-        <button onClick={handleEdit} className="edit-btn" title="Edit">
+        <button onClick={(e) => { e.stopPropagation(); handleEdit(); }} className="edit-btn" title="Edit">
           <Edit />
         </button>
-        <button onClick={handleDelete} className="delete-btn" title="Delete">
+        <button onClick={(e) => { e.stopPropagation(); handleDelete(); }} className="delete-btn" title="Delete">
           <Delete />
         </button>
       </div>

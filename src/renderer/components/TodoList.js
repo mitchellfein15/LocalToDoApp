@@ -4,7 +4,7 @@ import TodoForm from './TodoForm';
 import ApiService from '../services/api';
 import './TodoList.css';
 
-function TodoList() {
+function TodoList({ onShowDetails, onToggle, onDelete, onUpdate }) {
   const [todos, setTodos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -46,6 +46,10 @@ function TodoList() {
       setTodos(todos.map(todo => 
         todo.id === id ? updatedTodo : todo
       ));
+      // Call the parent handler if provided
+      if (onToggle) {
+        onToggle(id);
+      }
     } catch (err) {
       setError('Failed to update todo');
       console.error('Error updating todo:', err);
@@ -56,6 +60,10 @@ function TodoList() {
     try {
       await ApiService.deleteTodo(id);
       setTodos(todos.filter(todo => todo.id !== id));
+      // Call the parent handler if provided
+      if (onDelete) {
+        onDelete(id);
+      }
     } catch (err) {
       setError('Failed to delete todo');
       console.error('Error deleting todo:', err);
@@ -68,6 +76,10 @@ function TodoList() {
       setTodos(todos.map(todo => 
         todo.id === id ? updatedTodo : todo
       ));
+      // Call the parent handler if provided
+      if (onUpdate) {
+        onUpdate(id, todoData);
+      }
     } catch (err) {
       setError('Failed to update todo');
       console.error('Error updating todo:', err);
@@ -118,6 +130,7 @@ function TodoList() {
               onToggle={handleToggleTodo}
               onDelete={handleDeleteTodo}
               onUpdate={handleUpdateTodo}
+              onShowDetails={onShowDetails}
             />
           ))
         )}
