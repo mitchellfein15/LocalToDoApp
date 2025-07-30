@@ -47,7 +47,7 @@ function Settings({ open, onClose }) {
             }
             label={
               <Box className="theme-toggle-label">
-                {isDarkMode ? <DarkMode /> : <LightMode />}
+                {isDarkMode ? <DarkMode color="inherit" /> : <LightMode color="inherit" />}
                 <Typography>
                   {isDarkMode ? 'Dark Mode' : 'Light Mode'}
                 </Typography>

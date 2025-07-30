@@ -43,20 +43,17 @@ function TodoItem({ todo, onToggle, onDelete, onUpdate, onShowDetails }) {
   const formatDate = (dateString) => {
     if (!dateString) return '';
     
-    // If it's a date-only string (YYYY-MM-DD), parse it as local date
     if (dateString.match(/^\d{4}-\d{2}-\d{2}$/)) {
       const [year, month, day] = dateString.split('-');
       return new Date(parseInt(year), parseInt(month) - 1, parseInt(day)).toLocaleDateString();
     }
     
-    // For datetime strings, use the original method
     return new Date(dateString).toLocaleDateString();
   };
 
   const isOverdue = (dueDate) => {
     if (!dueDate) return false;
     
-    // If it's a date-only string (YYYY-MM-DD), parse it as local date
     if (dueDate.match(/^\d{4}-\d{2}-\d{2}$/)) {
       const [year, month, day] = dueDate.split('-');
       const dueDateObj = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
@@ -68,7 +65,6 @@ function TodoItem({ todo, onToggle, onDelete, onUpdate, onShowDetails }) {
       return dueStart < todayStart && !todo.completed;
     }
     
-    // For other date formats, use the original method
     const today = new Date();
     const due = new Date(dueDate);
     const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
@@ -152,10 +148,10 @@ function TodoItem({ todo, onToggle, onDelete, onUpdate, onShowDetails }) {
 
       <div className="todo-actions">
         <button onClick={(e) => { e.stopPropagation(); handleEdit(); }} className="edit-btn" title="Edit">
-          <Edit />
+          <Edit color="inherit" />
         </button>
         <button onClick={(e) => { e.stopPropagation(); handleDelete(); }} className="delete-btn" title="Delete">
-          <Delete />
+          <Delete color="inherit" />
         </button>
       </div>
     </div>

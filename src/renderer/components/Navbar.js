@@ -30,7 +30,7 @@ function Navbar({ activeTab, onTabChange, onSettingsClick }) {
           onClick={onSettingsClick}
           title="Settings"
         >
-          <SettingsIcon />
+          <SettingsIcon color="inherit" />
         </button>
       </div>
     </nav>

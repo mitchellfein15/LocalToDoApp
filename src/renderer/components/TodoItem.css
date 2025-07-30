@@ -110,7 +110,7 @@
   margin-left: 16px;
 }
 
-.edit-btn, .delete-btn {
+.todo-item .edit-btn, .todo-item .delete-btn {
   background: none;
   border: none;
   cursor: pointer;
@@ -123,32 +123,31 @@
   color: #666;
 }
 
-.edit-btn:hover {
+.todo-item .edit-btn:hover {
   background: #e3f2fd;
   color: #1976d2;
 }
 
-.delete-btn:hover {
+.todo-item .delete-btn:hover {
   background: #ffebee;
   color: #d32f2f;
 }
 
-[data-theme="dark"] .edit-btn,
-[data-theme="dark"] .delete-btn {
+[data-theme="dark"] .todo-item .edit-btn,
+[data-theme="dark"] .todo-item .delete-btn {
   color: #b0b0b0;
 }
 
-[data-theme="dark"] .edit-btn:hover {
+[data-theme="dark"] .todo-item .edit-btn:hover {
   background: #1a237e;
   color: #64b5f6;
 }
 
-[data-theme="dark"] .delete-btn:hover {
+[data-theme="dark"] .todo-item .delete-btn:hover {
   background: #891818;
   color: #ff6666;
 }
 
-/* Edit form styles */
 .todo-item.editing {
   background: #f8f9fa;
   border-color: #667eea;
@@ -278,7 +277,6 @@
   background: #5a6268;
 }
 
-/* Due date styles */
 .todo-due-date {
   color: #28a745;
   font-weight: 500;
