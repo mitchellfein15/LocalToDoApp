@@ -22,6 +22,12 @@ function Navbar({ activeTab, onTabChange, onSettingsClick }) {
         >
           Calendar
         </button>
+        <button 
+          className={`nav-tab ${activeTab === 'category' ? 'active' : ''}`}
+          onClick={() => onTabChange('category')}
+        >
+          Categories
+        </button>
       </div>
       
       <div className="nav-actions">

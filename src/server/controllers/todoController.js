@@ -10,7 +10,12 @@ class TodoController {
   static getAllTodos(req, res) {
     const db = TodoController.getDb();
     
-    db.all('SELECT * FROM todos ORDER BY created_at DESC', (err, rows) => {
+    db.all(`
+      SELECT t.*, c.name as category_name, c.color as category_color 
+      FROM todos t 
+      LEFT JOIN categories c ON t.category_id = c.id 
+      ORDER BY t.created_at DESC
+    `, (err, rows) => {
       if (err) {
         res.status(500).json({ error: err.message });
         return;
@@ -26,7 +31,12 @@ class TodoController {
     const db = TodoController.getDb();
     const { id } = req.params;
     
-    db.get('SELECT * FROM todos WHERE id = ?', [id], (err, row) => {
+    db.get(`
+      SELECT t.*, c.name as category_name, c.color as category_color 
+      FROM todos t 
+      LEFT JOIN categories c ON t.category_id = c.id 
+      WHERE t.id = ?
+    `, [id], (err, row) => {
       if (err) {
         res.status(500).json({ error: err.message });
         return;
@@ -44,15 +54,15 @@ class TodoController {
   // Create new todo
   static createTodo(req, res) {
     const db = TodoController.getDb();
-    const { title, description, due_date } = req.body;
+    const { title, description, due_date, category_id } = req.body;
     
     if (!title) {
       res.status(400).json({ error: 'Title is required' });
       return;
     }
     
-    const sql = 'INSERT INTO todos (title, description, due_date) VALUES (?, ?, ?)';
-    const params = [title, description || '', due_date || null];
+    const sql = 'INSERT INTO todos (title, description, due_date, category_id) VALUES (?, ?, ?, ?)';
+    const params = [title, description || '', due_date || null, category_id || null];
     
     db.run(sql, params, function(err) {
       if (err) {
@@ -60,8 +70,13 @@ class TodoController {
         return;
       }
       
-      // Get the created todo
-      db.get('SELECT * FROM todos WHERE id = ?', [this.lastID], (err, row) => {
+      // Get the created todo with category info
+      db.get(`
+        SELECT t.*, c.name as category_name, c.color as category_color 
+        FROM todos t 
+        LEFT JOIN categories c ON t.category_id = c.id 
+        WHERE t.id = ?
+      `, [this.lastID], (err, row) => {
         if (err) {
           res.status(500).json({ error: err.message });
           return;
@@ -77,15 +92,15 @@ class TodoController {
   static updateTodo(req, res) {
     const db = TodoController.getDb();
     const { id } = req.params;
-    const { title, description, due_date } = req.body;
+    const { title, description, due_date, category_id } = req.body;
     
     if (!title) {
       res.status(400).json({ error: 'Title is required' });
       return;
     }
     
-    const sql = 'UPDATE todos SET title = ?, description = ?, due_date = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?';
-    const params = [title, description || '', due_date || null, id];
+    const sql = 'UPDATE todos SET title = ?, description = ?, due_date = ?, category_id = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?';
+    const params = [title, description || '', due_date || null, category_id || null, id];
     
     db.run(sql, params, function(err) {
       if (err) {
@@ -98,8 +113,13 @@ class TodoController {
         return;
       }
       
-      // Get the updated todo
-      db.get('SELECT * FROM todos WHERE id = ?', [id], (err, row) => {
+      // Get the updated todo with category info
+      db.get(`
+        SELECT t.*, c.name as category_name, c.color as category_color 
+        FROM todos t 
+        LEFT JOIN categories c ON t.category_id = c.id 
+        WHERE t.id = ?
+      `, [id], (err, row) => {
         if (err) {
           res.status(500).json({ error: err.message });
           return;
@@ -160,8 +180,13 @@ class TodoController {
           return;
         }
         
-        // Get the updated todo
-        db.get('SELECT * FROM todos WHERE id = ?', [id], (err, updatedRow) => {
+        // Get the updated todo with category info
+        db.get(`
+          SELECT t.*, c.name as category_name, c.color as category_color 
+          FROM todos t 
+          LEFT JOIN categories c ON t.category_id = c.id 
+          WHERE t.id = ?
+        `, [id], (err, updatedRow) => {
           if (err) {
             res.status(500).json({ error: err.message });
             return;

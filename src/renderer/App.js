@@ -3,6 +3,7 @@ import { ThemeProvider } from './context/ThemeContext';
 import Navbar from './components/Navbar';
 import TodoList from './components/TodoList';
 import Calendar from './components/Calendar';
+import Category from './components/Category';
 import Settings from './components/Settings';
 import TodoDetailModal from './components/TodoDetailModal';
 import './App.css';
@@ -68,6 +69,9 @@ function App() {
               onDelete={handleDeleteTodo}
               onUpdate={handleUpdateTodo}
             />
+          )}
+          {activeTab === 'category' && (
+            <Category />
           )}
         </div>
         

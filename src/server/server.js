@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const { initDatabase } = require('../database/init');
 const todoRoutes = require('./routes/todos');
+const categoryRoutes = require('./routes/categories');
 
 const app = express();
 const PORT = 3001;
@@ -21,6 +22,7 @@ initDatabase()
 
 // Routes
 app.use('/api/todos', todoRoutes);
+app.use('/api/categories', categoryRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

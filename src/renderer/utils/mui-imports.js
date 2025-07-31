@@ -16,4 +16,6 @@ export { default as DarkMode } from '@mui/icons-material/DarkMode';
 export { default as LightMode } from '@mui/icons-material/LightMode';
 export { default as SettingsIcon } from '@mui/icons-material/Settings';
 export { default as Edit } from '@mui/icons-material/Edit';
-export { default as Delete } from '@mui/icons-material/Delete'; 
+export { default as Delete } from '@mui/icons-material/Delete';
+export { default as Add } from '@mui/icons-material/Add';
+export { default as ColorLens } from '@mui/icons-material/ColorLens'; 
