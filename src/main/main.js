@@ -2,6 +2,10 @@ const { app, BrowserWindow } = require('electron');
 const path = require('path');
 const isDev = process.env.NODE_ENV === 'development';
 
+// Configure app paths and cache directories
+app.setPath('userData', path.join(app.getPath('appData'), 'LocalToDoApp'));
+app.setPath('temp', path.join(app.getPath('temp'), 'LocalToDoApp'));
+
 // Start the Express server
 require('../server/server.js');
 
@@ -12,7 +16,10 @@ function createWindow() {
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
-      enableRemoteModule: false
+      enableRemoteModule: false,
+      // Add these settings to help with cache issues
+      webSecurity: true,
+      allowRunningInsecureContent: false
     }
   });
 
@@ -24,7 +31,15 @@ function createWindow() {
   }
 }
 
-app.whenReady().then(createWindow);
+// Handle app ready event
+app.whenReady().then(() => {
+  // Set additional app configurations
+  app.commandLine.appendSwitch('--disable-gpu-cache');
+  app.commandLine.appendSwitch('--disable-disk-cache');
+  app.commandLine.appendSwitch('--disable-application-cache');
+  
+  createWindow();
+});
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
