@@ -7,7 +7,6 @@ import './TodoList.css';
 function TodoList({ onShowDetails, onToggle, onDelete, onUpdate }) {
   const [todos, setTodos] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [showForm, setShowForm] = useState(false);
 
   // Load todos on component mount
@@ -35,7 +34,6 @@ function TodoList({ onShowDetails, onToggle, onDelete, onUpdate }) {
       setTodos([newTodo, ...todos]);
       setShowForm(false);
     } catch (err) {
-      setError('Failed to create todo');
       console.error('Error creating todo:', err);
     }
   };
@@ -51,7 +49,6 @@ function TodoList({ onShowDetails, onToggle, onDelete, onUpdate }) {
         onToggle(id);
       }
     } catch (err) {
-      setError('Failed to update todo');
       console.error('Error updating todo:', err);
     }
   };
@@ -65,7 +62,6 @@ function TodoList({ onShowDetails, onToggle, onDelete, onUpdate }) {
         onDelete(id);
       }
     } catch (err) {
-      setError('Failed to delete todo');
       console.error('Error deleting todo:', err);
     }
   };
@@ -81,7 +77,6 @@ function TodoList({ onShowDetails, onToggle, onDelete, onUpdate }) {
         onUpdate(id, todoData);
       }
     } catch (err) {
-      setError('Failed to update todo');
       console.error('Error updating todo:', err);
     }
   };
@@ -103,12 +98,7 @@ function TodoList({ onShowDetails, onToggle, onDelete, onUpdate }) {
         </div>
       </div>
 
-      {error && (
-        <div className="error-message">
-          {error}
-          <button onClick={() => setError(null)}>×</button>
-        </div>
-      )}
+
 
       {showForm && (
         <TodoForm 

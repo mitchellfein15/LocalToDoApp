@@ -13,9 +13,7 @@ function TodoItem({ todo, onToggle, onDelete, onUpdate, onShowDetails }) {
   };
 
   const handleDelete = () => {
-    if (window.confirm('Are you sure you want to delete this todo?')) {
-      onDelete(todo.id);
-    }
+    onDelete(todo.id);
   };
 
   const handleEdit = () => {
