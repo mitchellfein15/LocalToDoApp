@@ -10,6 +10,7 @@ export { default as FormControlLabel } from '@mui/material/FormControlLabel';
 export { default as Typography } from '@mui/material/Typography';
 export { default as Box } from '@mui/material/Box';
 export { default as Divider } from '@mui/material/Divider';
+export { default as Chip } from '@mui/material/Chip';
 
 // Material-UI icons
 export { default as DarkMode } from '@mui/icons-material/DarkMode';

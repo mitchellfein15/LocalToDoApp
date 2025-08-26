@@ -126,18 +126,10 @@ function TodoItem({ todo, onToggle, onDelete, onUpdate, onShowDetails }) {
             <p className="todo-description">{todo.description}</p>
           )}
           <div className="todo-meta">
-            <span className="todo-date">
-              Created: {formatDate(todo.created_at)}
-            </span>
             {todo.due_date && (
               <span className={`todo-due-date ${isOverdue(todo.due_date) ? 'overdue' : ''}`}>
                 Due: {formatDate(todo.due_date)}
                 {isOverdue(todo.due_date) && <span className="overdue-indicator"> (Overdue)</span>}
-              </span>
-            )}
-            {todo.updated_at !== todo.created_at && (
-              <span className="todo-updated">
-                Updated: {formatDate(todo.updated_at)}
               </span>
             )}
           </div>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dialog, DialogTitle, DialogContent, Typography, Box, Divider } from '../utils/mui-imports';
+import { Dialog, DialogTitle, DialogContent, Typography, Box, Divider, Chip } from '../utils/mui-imports';
 import './TodoDetailModal.css';
 
 function TodoDetailModal({ open, onClose, todo, onToggle, onDelete, onUpdate }) {
@@ -72,32 +72,28 @@ function TodoDetailModal({ open, onClose, todo, onToggle, onDelete, onUpdate }) 
     >
       <DialogTitle className="modal-title">
         <Box display="flex" alignItems="center" justifyContent="space-between">
-          <Typography variant="h5" component="h2">
+          <Typography variant="h4" component="h2" className="todo-title-main">
             {todo.title}
           </Typography>
-          <div 
-            className="status-badge"
+          <Chip 
+            label={getStatusText()}
+            className="status-chip"
             style={{ backgroundColor: getStatusColor() }}
-          >
-            {getStatusText()}
-          </div>
+            size="small"
+          />
         </Box>
       </DialogTitle>
       
       <DialogContent className="modal-content">
-
         {todo.description && (
-          <>
-            <Box className="todo-detail-section">
-              <Typography variant="body1" className="todo-description">
-                {todo.description}
-              </Typography>
-            </Box>
-            <Divider className="section-divider" />
-          </>
+          <Box className="todo-detail-section main-content">
+            <Typography variant="body1" className="todo-description">
+              {todo.description}
+            </Typography>
+          </Box>
         )}
 
-        <Box className="todo-detail-section">
+        <Box className="todo-detail-section main-content">
           <Typography variant="h6" className="section-title">
             Due Date
           </Typography>
@@ -112,33 +108,27 @@ function TodoDetailModal({ open, onClose, todo, onToggle, onDelete, onUpdate }) 
           </Typography>
         </Box>
 
-        <Divider className="section-divider" />
+        <Box className="metadata-section">
+          <Box className="metadata-item">
+            <Typography variant="caption" className="metadata-label">
+              Created
+            </Typography>
+            <Typography variant="body2" className="metadata-value">
+              {formatDateTime(todo.created_at)}
+            </Typography>
+          </Box>
 
-        <Box className="todo-detail-section">
-          <Typography variant="h6" className="section-title">
-            Created
-          </Typography>
-          <Typography variant="body2" className="todo-date">
-            {formatDateTime(todo.created_at)}
-          </Typography>
-        </Box>
-
-        {todo.updated_at !== todo.created_at && (
-          <>
-            <Divider className="section-divider" />
-            <Box className="todo-detail-section">
-              <Typography variant="h6" className="section-title">
+          {todo.updated_at !== todo.created_at && (
+            <Box className="metadata-item">
+              <Typography variant="caption" className="metadata-label">
                 Last Updated
               </Typography>
-              <Typography variant="body2" className="todo-date">
+              <Typography variant="body2" className="metadata-value">
                 {formatDateTime(todo.updated_at)}
               </Typography>
             </Box>
-          </>
-        )}
-
-        <Divider className="section-divider" />
-
+          )}
+        </Box>
       </DialogContent>
     </Dialog>
   );
