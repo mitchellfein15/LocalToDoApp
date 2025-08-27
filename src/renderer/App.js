@@ -13,7 +13,6 @@ function App() {
   const [showSettings, setShowSettings] = useState(false);
   const [selectedTodo, setSelectedTodo] = useState(null);
   const [showTodoModal, setShowTodoModal] = useState(false);
-  const [todoChangeCounter, setTodoChangeCounter] = useState(0);
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
@@ -35,17 +34,14 @@ function App() {
 
   const handleToggleTodo = (todoId) => {
     handleCloseTodoModal();
-    setTodoChangeCounter(prev => prev + 1);
   };
 
   const handleDeleteTodo = (todoId) => {
     handleCloseTodoModal();
-    setTodoChangeCounter(prev => prev + 1);
   };
 
   const handleUpdateTodo = (todoId, updates) => {
     handleCloseTodoModal();
-    setTodoChangeCounter(prev => prev + 1);
   };
 
   return (
@@ -75,7 +71,7 @@ function App() {
             />
           )}
           {activeTab === 'category' && (
-            <Category onTodoChange={todoChangeCounter} />
+            <Category />
           )}
         </div>
         

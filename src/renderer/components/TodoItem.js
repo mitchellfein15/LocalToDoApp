@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Edit, Delete, Folder } from '../utils/mui-imports';
+import React, { useState, useEffect } from 'react';
+import { Edit, Delete } from '../utils/mui-imports';
 import './TodoItem.css';
 
 function TodoItem({ todo, onToggle, onDelete, onUpdate, onShowDetails }) {
@@ -7,6 +7,24 @@ function TodoItem({ todo, onToggle, onDelete, onUpdate, onShowDetails }) {
   const [editTitle, setEditTitle] = useState(todo.title);
   const [editDescription, setEditDescription] = useState(todo.description || '');
   const [editDueDate, setEditDueDate] = useState(todo.due_date || '');
+  const [editCategoryId, setEditCategoryId] = useState(todo.category_id || '');
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch('http://localhost:3001/api/categories');
+      if (response.ok) {
+        const data = await response.json();
+        setCategories(data);
+      }
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    }
+  };
 
   const handleToggle = () => {
     onToggle(todo.id);
@@ -27,7 +45,8 @@ function TodoItem({ todo, onToggle, onDelete, onUpdate, onShowDetails }) {
       onUpdate(todo.id, {
         title: editTitle.trim(),
         description: editDescription.trim(),
-        due_date: editDueDate || null
+        due_date: editDueDate || null,
+        category_id: editCategoryId || null
       });
       setIsEditing(false);
     }
@@ -37,6 +56,7 @@ function TodoItem({ todo, onToggle, onDelete, onUpdate, onShowDetails }) {
     setEditTitle(todo.title);
     setEditDescription(todo.description || '');
     setEditDueDate(todo.due_date || '');
+    setEditCategoryId(todo.category_id || '');
     setIsEditing(false);
   };
 
@@ -89,6 +109,18 @@ function TodoItem({ todo, onToggle, onDelete, onUpdate, onShowDetails }) {
             placeholder="Description (optional)"
             className="edit-description"
           />
+          <select
+            value={editCategoryId}
+            onChange={(e) => setEditCategoryId(e.target.value)}
+            className="edit-category-select"
+          >
+            <option value="">No Category</option>
+            {categories.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.name}
+              </option>
+            ))}
+          </select>
           <input
             type="date"
             value={editDueDate}
@@ -125,11 +157,16 @@ function TodoItem({ todo, onToggle, onDelete, onUpdate, onShowDetails }) {
         <div className="todo-details">
           <div className="todo-header">
             <h3 className="todo-title">{todo.title}</h3>
-            {todo.category && (
-              <div className="todo-category-badge">
-                <Folder className="category-icon" />
-                <span>{todo.category.name}</span>
-              </div>
+            {todo.category_name && (
+              <span 
+                className="todo-category"
+                style={{ 
+                  backgroundColor: todo.category_color,
+                  color: getContrastColor(todo.category_color)
+                }}
+              >
+                {todo.category_name}
+              </span>
             )}
           </div>
           {todo.description && (
@@ -164,6 +201,23 @@ function TodoItem({ todo, onToggle, onDelete, onUpdate, onShowDetails }) {
       </div>
     </div>
   );
+}
+
+// Helper function to determine text color based on background color
+function getContrastColor(hexColor) {
+  // Remove # if present
+  const hex = hexColor.replace('#', '');
+  
+  // Convert to RGB
+  const r = parseInt(hex.substr(0, 2), 16);
+  const g = parseInt(hex.substr(2, 2), 16);
+  const b = parseInt(hex.substr(4, 2), 16);
+  
+  // Calculate luminance
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  
+  // Return black or white based on luminance
+  return luminance > 0.5 ? '#000000' : '#ffffff';
 }
 
 export default TodoItem; 

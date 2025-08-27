@@ -1,22 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import './TodoForm.css';
 
-function TodoForm({ onSubmit, onCancel, selectedCategory = null }) {
+function TodoForm({ onSubmit, onCancel }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [dueDate, setDueDate] = useState('');
-  const [categoryId, setCategoryId] = useState(selectedCategory ? selectedCategory.id : '');
+  const [categoryId, setCategoryId] = useState('');
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
     fetchCategories();
   }, []);
-
-  useEffect(() => {
-    if (selectedCategory) {
-      setCategoryId(selectedCategory.id);
-    }
-  }, [selectedCategory]);
 
   const fetchCategories = async () => {
     try {
@@ -42,7 +36,7 @@ function TodoForm({ onSubmit, onCancel, selectedCategory = null }) {
       setTitle('');
       setDescription('');
       setDueDate('');
-      setCategoryId(selectedCategory ? selectedCategory.id : '');
+      setCategoryId('');
     }
   };
 
@@ -50,7 +44,7 @@ function TodoForm({ onSubmit, onCancel, selectedCategory = null }) {
     setTitle('');
     setDescription('');
     setDueDate('');
-    setCategoryId(selectedCategory ? selectedCategory.id : '');
+    setCategoryId('');
     onCancel();
   };
 
@@ -80,39 +74,38 @@ function TodoForm({ onSubmit, onCancel, selectedCategory = null }) {
           />
         </div>
 
-        <div className="form-row">
-          <div className="form-group">
-            <label htmlFor="dueDate">Due Date</label>
-            <input
-              type="date"
-              id="dueDate"
-              value={dueDate}
-              onChange={(e) => setDueDate(e.target.value)}
-              min={(() => {
-                const today = new Date();
-                const year = today.getFullYear();
-                const month = String(today.getMonth() + 1).padStart(2, '0');
-                const day = String(today.getDate()).padStart(2, '0');
-                return `${year}-${month}-${day}`;
-              })()}
-            />
-          </div>
+        <div className="form-group">
+          <label htmlFor="category">Category</label>
+          <select
+            id="category"
+            value={categoryId}
+            onChange={(e) => setCategoryId(e.target.value)}
+            className="category-select"
+          >
+            <option value="">No Category</option>
+            {categories.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.name}
+              </option>
+            ))}
+          </select>
+        </div>
 
-          <div className="form-group">
-            <label htmlFor="category">Category</label>
-            <select
-              id="category"
-              value={categoryId}
-              onChange={(e) => setCategoryId(e.target.value)}
-            >
-              <option value="">No category</option>
-              {categories.map((category) => (
-                <option key={category.id} value={category.id}>
-                  {category.name}
-                </option>
-              ))}
-            </select>
-          </div>
+        <div className="form-group">
+          <label htmlFor="dueDate">Due Date</label>
+          <input
+            type="date"
+            id="dueDate"
+            value={dueDate}
+            onChange={(e) => setDueDate(e.target.value)}
+            min={(() => {
+              const today = new Date();
+              const year = today.getFullYear();
+              const month = String(today.getMonth() + 1).padStart(2, '0');
+              const day = String(today.getDate()).padStart(2, '0');
+              return `${year}-${month}-${day}`;
+            })()}
+          />
         </div>
         
         <div className="form-actions">

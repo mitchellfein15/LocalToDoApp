@@ -8,6 +8,9 @@ router.get('/', CategoryController.getAllCategories);
 // GET single category by ID
 router.get('/:id', CategoryController.getCategoryById);
 
+// GET todos by category ID
+router.get('/:id/todos', CategoryController.getTodosByCategory);
+
 // POST create new category
 router.post('/', CategoryController.createCategory);
 

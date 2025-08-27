@@ -19,18 +19,7 @@ function TodoList({ onShowDetails, onToggle, onDelete, onUpdate }) {
     try {
       setLoading(true);
       const data = await ApiService.getTodos();
-      
-      // Format todos to include proper category object
-      const formattedTodos = data.map(todo => ({
-        ...todo,
-        category: todo.category_name ? {
-          id: todo.category_id,
-          name: todo.category_name,
-          color: todo.category_color
-        } : null
-      }));
-      
-      setTodos(formattedTodos);
+      setTodos(data);
       setError(null);
     } catch (err) {
       setError('Failed to load todos');
@@ -43,18 +32,7 @@ function TodoList({ onShowDetails, onToggle, onDelete, onUpdate }) {
   const handleCreateTodo = async (todoData) => {
     try {
       const newTodo = await ApiService.createTodo(todoData);
-      
-      // Format the new todo to include proper category object
-      const formattedTodo = {
-        ...newTodo,
-        category: newTodo.category_name ? {
-          id: newTodo.category_id,
-          name: newTodo.category_name,
-          color: newTodo.category_color
-        } : null
-      };
-      
-      setTodos([formattedTodo, ...todos]);
+      setTodos([newTodo, ...todos]);
       setShowForm(false);
     } catch (err) {
       setError('Failed to create todo');
@@ -65,19 +43,8 @@ function TodoList({ onShowDetails, onToggle, onDelete, onUpdate }) {
   const handleToggleTodo = async (id) => {
     try {
       const updatedTodo = await ApiService.toggleTodo(id);
-      
-      // Format the updated todo to include proper category object
-      const formattedTodo = {
-        ...updatedTodo,
-        category: updatedTodo.category_name ? {
-          id: updatedTodo.category_id,
-          name: updatedTodo.category_name,
-          color: updatedTodo.category_color
-        } : null
-      };
-      
       setTodos(todos.map(todo => 
-        todo.id === id ? formattedTodo : todo
+        todo.id === id ? updatedTodo : todo
       ));
       // Call the parent handler if provided
       if (onToggle) {
@@ -106,19 +73,8 @@ function TodoList({ onShowDetails, onToggle, onDelete, onUpdate }) {
   const handleUpdateTodo = async (id, todoData) => {
     try {
       const updatedTodo = await ApiService.updateTodo(id, todoData);
-      
-      // Format the updated todo to include proper category object
-      const formattedTodo = {
-        ...updatedTodo,
-        category: updatedTodo.category_name ? {
-          id: updatedTodo.category_id,
-          name: updatedTodo.category_name,
-          color: updatedTodo.category_color
-        } : null
-      };
-      
       setTodos(todos.map(todo => 
-        todo.id === id ? formattedTodo : todo
+        todo.id === id ? updatedTodo : todo
       ));
       // Call the parent handler if provided
       if (onUpdate) {

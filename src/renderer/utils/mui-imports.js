@@ -19,5 +19,6 @@ export { default as Edit } from '@mui/icons-material/Edit';
 export { default as Delete } from '@mui/icons-material/Delete';
 export { default as Add } from '@mui/icons-material/Add';
 export { default as ColorLens } from '@mui/icons-material/ColorLens';
-export { default as Folder } from '@mui/icons-material/Folder';
-export { default as AddTask } from '@mui/icons-material/AddTask'; 
+export { default as AddTask } from '@mui/icons-material/AddTask';
+export { default as Visibility } from '@mui/icons-material/Visibility';
+export { default as VisibilityOff } from '@mui/icons-material/VisibilityOff'; 

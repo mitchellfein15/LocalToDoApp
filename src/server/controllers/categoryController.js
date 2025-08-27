@@ -141,6 +141,27 @@ class CategoryController {
       });
     });
   }
+
+  // Get todos by category ID
+  static getTodosByCategory(req, res) {
+    const db = new sqlite3.Database(dbPath);
+    const { id } = req.params;
+    
+    db.all(`
+      SELECT t.*, c.name as category_name, c.color as category_color 
+      FROM todos t 
+      LEFT JOIN categories c ON t.category_id = c.id 
+      WHERE t.category_id = ?
+      ORDER BY t.created_at DESC
+    `, [id], (err, rows) => {
+      db.close();
+      if (err) {
+        res.status(500).json({ error: err.message });
+        return;
+      }
+      res.json(rows);
+    });
+  }
 }
 
 module.exports = CategoryController; 

@@ -1,31 +1,30 @@
 import React, { useState, useEffect } from 'react';
-import { Add, Edit, Delete, ColorLens, Folder, AddTask } from '../utils/mui-imports';
+import { Add, Edit, Delete, ColorLens, AddTask, Visibility, VisibilityOff } from '../utils/mui-imports';
 import './Category.css';
 
-function Category({ onTodoChange }) {
+function Category() {
   const [categories, setCategories] = useState([]);
+  const [todosByCategory, setTodosByCategory] = useState({});
   const [newCategoryName, setNewCategoryName] = useState('');
-  const [newCategoryColor, setNewCategoryColor] = useState('blue');
+  const [newCategoryColor, setNewCategoryColor] = useState('#3b82f6');
   const [editingCategory, setEditingCategory] = useState(null);
   const [editName, setEditName] = useState('');
   const [editColor, setEditColor] = useState('');
   const [showCreateForm, setShowCreateForm] = useState(false);
-  const [categoryTodos, setCategoryTodos] = useState({});
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [expandedCategories, setExpandedCategories] = useState(new Set());
 
-  // Modern color palette with proper contrast for both themes
+  // Modern color palette that works well with both light and dark modes
   const colorOptions = [
-    { value: 'blue', label: 'Blue', light: '#3b82f6', dark: '#60a5fa' },
-    { value: 'green', label: 'Green', light: '#10b981', dark: '#34d399' },
-    { value: 'purple', label: 'Purple', light: '#8b5cf6', dark: '#a78bfa' },
-    { value: 'orange', label: 'Orange', light: '#f59e0b', dark: '#fbbf24' },
-    { value: 'red', label: 'Red', light: '#ef4444', dark: '#f87171' },
-    { value: 'teal', label: 'Teal', light: '#14b8a6', dark: '#5eead4' },
-    { value: 'pink', label: 'Pink', light: '#ec4899', dark: '#f472b6' },
-    { value: 'indigo', label: 'Indigo', light: '#6366f1', dark: '#818cf8' },
-    { value: 'yellow', label: 'Yellow', light: '#eab308', dark: '#facc15' },
-    { value: 'gray', label: 'Gray', light: '#6b7280', dark: '#9ca3af' }
+    { value: '#3b82f6', name: 'Blue' },
+    { value: '#10b981', name: 'Green' },
+    { value: '#f59e0b', name: 'Amber' },
+    { value: '#ef4444', name: 'Red' },
+    { value: '#8b5cf6', name: 'Purple' },
+    { value: '#06b6d4', name: 'Cyan' },
+    { value: '#f97316', name: 'Orange' },
+    { value: '#ec4899', name: 'Pink' },
+    { value: '#84cc16', name: 'Lime' },
+    { value: '#6b7280', name: 'Gray' }
   ];
 
   useEffect(() => {
@@ -34,61 +33,41 @@ function Category({ onTodoChange }) {
 
   useEffect(() => {
     if (categories.length > 0) {
-      fetchCategoryTodos();
+      fetchTodosForAllCategories();
     }
   }, [categories]);
 
-  useEffect(() => {
-    if (onTodoChange) {
-      fetchCategoryTodos();
-    }
-  }, [onTodoChange]);
-
   const fetchCategories = async () => {
     try {
-      setLoading(true);
-      setError(null);
       const response = await fetch('http://localhost:3001/api/categories');
       if (response.ok) {
         const data = await response.json();
         setCategories(data);
       } else {
-        setError('Failed to fetch categories');
         console.error('Failed to fetch categories:', response.status);
       }
     } catch (error) {
-      setError('Error fetching categories');
       console.error('Error fetching categories:', error);
-    } finally {
-      setLoading(false);
     }
   };
 
-  const fetchCategoryTodos = async () => {
-    try {
-      const todosResponse = await fetch('http://localhost:3001/api/todos');
-      if (todosResponse.ok) {
-        const todos = await todosResponse.json();
-        
-        // Group todos by category and format them properly
-        const groupedTodos = {};
-        categories.forEach(category => {
-          const categoryTodos = todos.filter(todo => todo.category_id === category.id);
-          groupedTodos[category.id] = categoryTodos.map(todo => ({
-            ...todo,
-            category: {
-              id: category.id,
-              name: category.name,
-              color: category.color
-            }
-          }));
-        });
-        
-        setCategoryTodos(groupedTodos);
+  const fetchTodosForAllCategories = async () => {
+    const todosData = {};
+    
+    for (const category of categories) {
+      try {
+        const response = await fetch(`http://localhost:3001/api/categories/${category.id}/todos`);
+        if (response.ok) {
+          const todos = await response.json();
+          todosData[category.id] = todos;
+        }
+      } catch (error) {
+        console.error(`Error fetching todos for category ${category.id}:`, error);
+        todosData[category.id] = [];
       }
-    } catch (error) {
-      console.error('Error fetching category todos:', error);
     }
+    
+    setTodosByCategory(todosData);
   };
 
   const handleCreateCategory = async () => {
@@ -110,8 +89,10 @@ function Category({ onTodoChange }) {
         const newCategory = await response.json();
         setCategories([...categories, newCategory]);
         setNewCategoryName('');
-        setNewCategoryColor('blue');
+        setNewCategoryColor('#3b82f6');
         setShowCreateForm(false);
+        // Expand the new category
+        setExpandedCategories(prev => new Set([...prev, newCategory.id]));
       } else {
         const error = await response.json();
         alert(error.error || 'Failed to create category');
@@ -145,7 +126,6 @@ function Category({ onTodoChange }) {
         setEditingCategory(null);
         setEditName('');
         setEditColor('');
-        setShowCreateForm(false);
       } else {
         const error = await response.json();
         alert(error.error || 'Failed to update category');
@@ -157,7 +137,7 @@ function Category({ onTodoChange }) {
   };
 
   const handleDeleteCategory = async (categoryId) => {
-    if (!window.confirm('Are you sure you want to delete this category?')) return;
+    if (!window.confirm('Are you sure you want to delete this category? This will remove the category from all associated todos.')) return;
 
     try {
       const response = await fetch(`http://localhost:3001/api/categories/${categoryId}`, {
@@ -166,6 +146,16 @@ function Category({ onTodoChange }) {
 
       if (response.ok) {
         setCategories(categories.filter(cat => cat.id !== categoryId));
+        setTodosByCategory(prev => {
+          const newTodos = { ...prev };
+          delete newTodos[categoryId];
+          return newTodos;
+        });
+        setExpandedCategories(prev => {
+          const newExpanded = new Set(prev);
+          newExpanded.delete(categoryId);
+          return newExpanded;
+        });
       } else {
         const error = await response.json();
         alert(error.error || 'Failed to delete category');
@@ -188,232 +178,236 @@ function Category({ onTodoChange }) {
     setEditColor('');
   };
 
+  const toggleCategoryExpansion = (categoryId) => {
+    setExpandedCategories(prev => {
+      const newExpanded = new Set(prev);
+      if (newExpanded.has(categoryId)) {
+        newExpanded.delete(categoryId);
+      } else {
+        newExpanded.add(categoryId);
+      }
+      return newExpanded;
+    });
+  };
+
+  const getContrastColor = (hexColor) => {
+    const hex = hexColor.replace('#', '');
+    const r = parseInt(hex.substr(0, 2), 16);
+    const g = parseInt(hex.substr(2, 2), 16);
+    const b = parseInt(hex.substr(4, 2), 16);
+    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+    return luminance > 0.5 ? '#000000' : '#ffffff';
+  };
+
+  const formatDate = (dateString) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toLocaleDateString();
+  };
+
   return (
     <div className="category-container">
       <div className="category-header">
-        <div className="header-content">
-          <h1>Categories</h1>
-          <p>Organize your todos with custom categories</p>
-        </div>
-        <button 
-          className="create-category-toggle"
-          onClick={() => setShowCreateForm(!showCreateForm)}
-        >
-          <Add />
-          {showCreateForm ? 'Cancel' : 'New Category'}
-        </button>
+        <h2>Categories</h2>
+        <p>Organize your todos with custom categories</p>
       </div>
 
-      {/* Create new category */}
-      {showCreateForm && (
-        <div className="create-category-section">
+      {/* Create new category button */}
+      <div className="create-category-section">
+        {!showCreateForm ? (
+          <button 
+            onClick={() => setShowCreateForm(true)}
+            className="create-category-btn"
+          >
+            <Add />
+            Create New Category
+          </button>
+        ) : (
           <div className="create-category-form">
+            <h3>Create New Category</h3>
             <div className="form-row">
-              <div className="input-group">
-                <label htmlFor="categoryName">Category Name</label>
-                <input
-                  id="categoryName"
-                  type="text"
-                  value={newCategoryName}
-                  onChange={(e) => setNewCategoryName(e.target.value)}
-                  placeholder="Enter category name"
-                  className="category-name-input"
+              <input
+                type="text"
+                value={newCategoryName}
+                onChange={(e) => setNewCategoryName(e.target.value)}
+                placeholder="Category name"
+                className="category-name-input"
+              />
+              <div className="color-picker-container">
+                <ColorLens className="color-icon" />
+                <select
+                  value={newCategoryColor}
+                  onChange={(e) => setNewCategoryColor(e.target.value)}
+                  className="color-select"
+                >
+                  {colorOptions.map((color) => (
+                    <option key={color.value} value={color.value}>
+                      {color.name}
+                    </option>
+                  ))}
+                </select>
+                <div 
+                  className="color-preview" 
+                  style={{ backgroundColor: newCategoryColor }}
                 />
               </div>
-              
-              <div className="input-group">
-                <label htmlFor="categoryColor">Color</label>
-                <div className="color-picker">
-                  {colorOptions.map((color) => (
-                    <button
-                      key={color.value}
-                      type="button"
-                      className={`color-option ${newCategoryColor === color.value ? 'selected' : ''}`}
-                      style={{ 
-                        backgroundColor: color.light,
-                        '--dark-color': color.dark
-                      }}
-                      onClick={() => setNewCategoryColor(color.value)}
-                      title={color.label}
-                    />
-                  ))}
-                </div>
-              </div>
             </div>
-            
             <div className="form-actions">
               <button 
                 onClick={handleCreateCategory}
                 disabled={!newCategoryName.trim()}
-                className="create-category-btn"
+                className="submit-btn"
               >
                 <Add />
                 Create Category
+              </button>
+              <button 
+                onClick={() => setShowCreateForm(false)}
+                className="cancel-btn"
+              >
+                Cancel
               </button>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
-      {/* Categories grid */}
-      {loading ? (
-        <div className="loading-state">
-          <div className="loading-spinner"></div>
-          <p>Loading categories...</p>
-        </div>
-      ) : error ? (
-        <div className="error-state">
-          <p>{error}</p>
-          <button onClick={fetchCategories} className="retry-btn">
-            Try Again
-          </button>
-        </div>
-      ) : (
-        <div className="categories-grid">
-          {categories.length === 0 ? (
-            <div className="empty-state">
-              <Folder className="empty-icon" />
-              <h3>No categories yet</h3>
-              <p>Create your first category to start organizing your todos</p>
-              <button 
-                className="create-first-btn"
-                onClick={() => setShowCreateForm(true)}
-              >
-                <Add />
-                Create Category
-              </button>
-            </div>
-          ) : (
-            categories.map((category) => (
-              <div key={category.id} className="category-card">
-              {editingCategory?.id === category.id ? (
+      {/* Categories list with todo containers */}
+      <div className="categories-grid">
+        {categories.length === 0 ? (
+          <div className="no-categories">
+            <div className="no-categories-icon">📁</div>
+            <h3>No categories yet</h3>
+            <p>Create your first category to start organizing your todos!</p>
+          </div>
+        ) : (
+          categories.map((category) => (
+            <div key={category.id} className="category-card">
+              <div className="category-card-header">
+                <div className="category-info">
+                  <div 
+                    className="category-color-indicator"
+                    style={{ backgroundColor: category.color }}
+                  />
+                  <h3 className="category-name">{category.name}</h3>
+                  <span className="todo-count">
+                    {todosByCategory[category.id]?.length || 0} todos
+                  </span>
+                </div>
+                <div className="category-actions">
+                  <button 
+                    onClick={() => toggleCategoryExpansion(category.id)}
+                    className="expand-btn"
+                    title={expandedCategories.has(category.id) ? "Collapse" : "Expand"}
+                  >
+                    {expandedCategories.has(category.id) ? <VisibilityOff /> : <Visibility />}
+                  </button>
+                  <button 
+                    onClick={() => startEditing(category)}
+                    className="edit-btn"
+                    title="Edit category"
+                  >
+                    <Edit />
+                  </button>
+                  <button 
+                    onClick={() => handleDeleteCategory(category.id)}
+                    className="delete-btn"
+                    title="Delete category"
+                  >
+                    <Delete />
+                  </button>
+                </div>
+              </div>
+
+              {/* Edit form */}
+              {editingCategory?.id === category.id && (
                 <div className="category-edit-form">
-                  <div className="edit-header">
-                    <h3>Edit Category</h3>
-                  </div>
-                  
-                  <div className="edit-content">
-                    <div className="input-group">
-                      <label htmlFor={`editName-${category.id}`}>Name</label>
-                      <input
-                        id={`editName-${category.id}`}
-                        type="text"
-                        value={editName}
-                        onChange={(e) => setEditName(e.target.value)}
-                        className="edit-category-name"
+                  <div className="form-row">
+                    <input
+                      type="text"
+                      value={editName}
+                      onChange={(e) => setEditName(e.target.value)}
+                      className="edit-category-name"
+                    />
+                    <div className="color-picker-container">
+                      <ColorLens className="color-icon" />
+                      <select
+                        value={editColor}
+                        onChange={(e) => setEditColor(e.target.value)}
+                        className="color-select"
+                      >
+                        {colorOptions.map((color) => (
+                          <option key={color.value} value={color.value}>
+                            {color.name}
+                          </option>
+                        ))}
+                      </select>
+                      <div 
+                        className="color-preview" 
+                        style={{ backgroundColor: editColor }}
                       />
                     </div>
-                    
-                    <div className="input-group">
-                      <label>Color</label>
-                      <div className="color-picker">
-                        {colorOptions.map((color) => (
-                          <button
-                            key={color.value}
-                            type="button"
-                            className={`color-option ${editColor === color.value ? 'selected' : ''}`}
-                            style={{ 
-                              backgroundColor: color.light,
-                              '--dark-color': color.dark
-                            }}
-                            onClick={() => setEditColor(color.value)}
-                            title={color.label}
-                          />
-                        ))}
-                      </div>
-                    </div>
                   </div>
-                  
                   <div className="edit-actions">
                     <button onClick={handleEditCategory} className="save-btn">
-                      Save Changes
+                      Save
                     </button>
                     <button onClick={cancelEditing} className="cancel-btn">
                       Cancel
                     </button>
                   </div>
                 </div>
-              ) : (
-                <>
-                  <div className="category-header">
-                    <div 
-                      className="category-color-badge"
-                      style={{ 
-                        backgroundColor: colorOptions.find(c => c.value === category.color)?.light,
-                        '--dark-color': colorOptions.find(c => c.value === category.color)?.dark
-                      }}
-                    />
-                    <div className="category-title">
-                      <h3>{category.name}</h3>
-                    </div>
-                    <div className="category-actions">
-                      <button 
-                        onClick={() => startEditing(category)}
-                        className="action-btn edit-btn"
-                        title="Edit category"
-                      >
-                        <Edit />
-                      </button>
-                      <button 
-                        onClick={() => handleDeleteCategory(category.id)}
-                        className="action-btn delete-btn"
-                        title="Delete category"
-                      >
-                        <Delete />
-                      </button>
-                    </div>
+              )}
+
+              {/* Todos container */}
+              {expandedCategories.has(category.id) && (
+                <div className="todos-container">
+                  <div className="todos-header">
+                    <h4>Todos in {category.name}</h4>
+                    <button className="add-todo-btn">
+                      <AddTask />
+                      Add Todo
+                    </button>
                   </div>
                   
-                  <div className="category-content">
-                    <div className="category-stats">
-                      <span className="stat-item">
-                        <AddTask />
-                        <span>{categoryTodos[category.id]?.length || 0} todos</span>
-                      </span>
+                  {todosByCategory[category.id]?.length === 0 ? (
+                    <div className="no-todos">
+                      <p>No todos in this category yet.</p>
                     </div>
-                    
-                    <div className="category-todos">
-                      {categoryTodos[category.id] && categoryTodos[category.id].length > 0 ? (
-                        <div className="todos-list">
-                          {categoryTodos[category.id].slice(0, 3).map((todo) => (
-                            <div key={todo.id} className="category-todo-item">
-                              <div className="todo-checkbox">
-                                <input
-                                  type="checkbox"
-                                  checked={todo.completed}
-                                  readOnly
-                                />
-                              </div>
-                              <div className="todo-info">
-                                <span className={`todo-title ${todo.completed ? 'completed' : ''}`}>
-                                  {todo.title}
+                  ) : (
+                    <div className="todos-list">
+                      {todosByCategory[category.id]?.map((todo) => (
+                        <div key={todo.id} className={`todo-item ${todo.completed ? 'completed' : ''}`}>
+                          <div className="todo-content">
+                            <div className="todo-checkbox">
+                              <input
+                                type="checkbox"
+                                checked={todo.completed}
+                                readOnly
+                              />
+                            </div>
+                            <div className="todo-details">
+                              <h5 className="todo-title">{todo.title}</h5>
+                              {todo.description && (
+                                <p className="todo-description">{todo.description}</p>
+                              )}
+                              {todo.due_date && (
+                                <span className="todo-due-date">
+                                  Due: {formatDate(todo.due_date)}
                                 </span>
-                                {todo.due_date && (
-                                  <span className="todo-due-date">
-                                    Due: {new Date(todo.due_date).toLocaleDateString()}
-                                  </span>
-                                )}
-                              </div>
+                              )}
                             </div>
-                          ))}
-                          {categoryTodos[category.id].length > 3 && (
-                            <div className="more-todos">
-                              +{categoryTodos[category.id].length - 3} more
-                            </div>
-                          )}
+                          </div>
                         </div>
-                      ) : (
-                        <p className="no-todos">No todos in this category yet</p>
-                      )}
+                      ))}
                     </div>
-                  </div>
-                </>
+                  )}
+                </div>
               )}
-              </div>
-            ))
-          )}
-        </div>
-      )}
+            </div>
+          ))
+        )}
+      </div>
     </div>
   );
 }
