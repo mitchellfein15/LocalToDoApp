@@ -75,17 +75,49 @@
   min-width: 0;
 }
 
+.todo-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
 .todo-title {
   font-size: 18px;
   font-weight: 600;
   color: #2c3e50;
-  margin-bottom: 8px;
+  margin: 0;
   line-height: 1.4;
   word-break: break-word;
 }
 
 [data-theme="dark"] .todo-title {
   color: #ffffff;
+}
+
+.todo-category-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  background: #f8f9fa;
+  border: 1px solid #e1e5e9;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #6c757d;
+  white-space: nowrap;
+}
+
+[data-theme="dark"] .todo-category-badge {
+  background: #2d2d2d;
+  border-color: #555;
+  color: #b0b0b0;
+}
+
+.todo-category-badge .category-icon {
+  font-size: 14px;
 }
 
 .todo-description {

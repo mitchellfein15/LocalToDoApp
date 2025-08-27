@@ -1,10 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './TodoForm.css';
 
-function TodoForm({ onSubmit, onCancel }) {
+function TodoForm({ onSubmit, onCancel, selectedCategory = null }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [dueDate, setDueDate] = useState('');
+  const [categoryId, setCategoryId] = useState(selectedCategory ? selectedCategory.id : '');
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  useEffect(() => {
+    if (selectedCategory) {
+      setCategoryId(selectedCategory.id);
+    }
+  }, [selectedCategory]);
+
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch('http://localhost:3001/api/categories');
+      if (response.ok) {
+        const data = await response.json();
+        setCategories(data);
+      }
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -12,11 +36,13 @@ function TodoForm({ onSubmit, onCancel }) {
       onSubmit({
         title: title.trim(),
         description: description.trim(),
-        due_date: dueDate || null
+        due_date: dueDate || null,
+        category_id: categoryId || null
       });
       setTitle('');
       setDescription('');
       setDueDate('');
+      setCategoryId(selectedCategory ? selectedCategory.id : '');
     }
   };
 
@@ -24,6 +50,7 @@ function TodoForm({ onSubmit, onCancel }) {
     setTitle('');
     setDescription('');
     setDueDate('');
+    setCategoryId(selectedCategory ? selectedCategory.id : '');
     onCancel();
   };
 
@@ -53,21 +80,39 @@ function TodoForm({ onSubmit, onCancel }) {
           />
         </div>
 
-        <div className="form-group">
-          <label htmlFor="dueDate">Due Date</label>
-          <input
-            type="date"
-            id="dueDate"
-            value={dueDate}
-            onChange={(e) => setDueDate(e.target.value)}
-            min={(() => {
-              const today = new Date();
-              const year = today.getFullYear();
-              const month = String(today.getMonth() + 1).padStart(2, '0');
-              const day = String(today.getDate()).padStart(2, '0');
-              return `${year}-${month}-${day}`;
-            })()}
-          />
+        <div className="form-row">
+          <div className="form-group">
+            <label htmlFor="dueDate">Due Date</label>
+            <input
+              type="date"
+              id="dueDate"
+              value={dueDate}
+              onChange={(e) => setDueDate(e.target.value)}
+              min={(() => {
+                const today = new Date();
+                const year = today.getFullYear();
+                const month = String(today.getMonth() + 1).padStart(2, '0');
+                const day = String(today.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+              })()}
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="category">Category</label>
+            <select
+              id="category"
+              value={categoryId}
+              onChange={(e) => setCategoryId(e.target.value)}
+            >
+              <option value="">No category</option>
+              {categories.map((category) => (
+                <option key={category.id} value={category.id}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
         
         <div className="form-actions">

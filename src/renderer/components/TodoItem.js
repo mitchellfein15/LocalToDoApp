@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Edit, Delete } from '../utils/mui-imports';
+import { Edit, Delete, Folder } from '../utils/mui-imports';
 import './TodoItem.css';
 
 function TodoItem({ todo, onToggle, onDelete, onUpdate, onShowDetails }) {
@@ -123,7 +123,15 @@ function TodoItem({ todo, onToggle, onDelete, onUpdate, onShowDetails }) {
         </div>
         
         <div className="todo-details">
-          <h3 className="todo-title">{todo.title}</h3>
+          <div className="todo-header">
+            <h3 className="todo-title">{todo.title}</h3>
+            {todo.category && (
+              <div className="todo-category-badge">
+                <Folder className="category-icon" />
+                <span>{todo.category.name}</span>
+              </div>
+            )}
+          </div>
           {todo.description && (
             <p className="todo-description">{todo.description}</p>
           )}

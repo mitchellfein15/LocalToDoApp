@@ -18,4 +18,6 @@ export { default as SettingsIcon } from '@mui/icons-material/Settings';
 export { default as Edit } from '@mui/icons-material/Edit';
 export { default as Delete } from '@mui/icons-material/Delete';
 export { default as Add } from '@mui/icons-material/Add';
-export { default as ColorLens } from '@mui/icons-material/ColorLens'; 
+export { default as ColorLens } from '@mui/icons-material/ColorLens';
+export { default as Folder } from '@mui/icons-material/Folder';
+export { default as AddTask } from '@mui/icons-material/AddTask'; 
