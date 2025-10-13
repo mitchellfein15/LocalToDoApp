@@ -7,7 +7,7 @@ function Navbar({ activeTab, onTabChange, onSettingsClick }) {
     <nav className="navbar">
       <div className="nav-brand">
           <img 
-            src="/calendar_icon_176372.ico" 
+            src="/LocalToDoApp/public/calendar_icon_176372.ico" 
             alt="Local Todo App" 
             className="nav-logo"
         />

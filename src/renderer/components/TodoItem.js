@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Edit, Delete } from '../utils/mui-imports';
+import { Edit, Delete, Check } from '../utils/mui-imports';
 import './TodoItem.css';
 
 function TodoItem({ todo, onToggle, onDelete, onUpdate, onShowDetails }) {
@@ -7,13 +7,19 @@ function TodoItem({ todo, onToggle, onDelete, onUpdate, onShowDetails }) {
   const [editTitle, setEditTitle] = useState(todo.title);
   const [editDescription, setEditDescription] = useState(todo.description || '');
   const [editDueDate, setEditDueDate] = useState(todo.due_date || '');
+  const [isCompleting, setIsCompleting] = useState(false);
 
   const handleToggle = () => {
     onToggle(todo.id);
   };
 
-  const handleDelete = () => {
-    onDelete(todo.id);
+  const handleComplete = () => {
+    setIsCompleting(true);
+    
+    // Trigger the completion animation
+    setTimeout(() => {
+      onDelete(todo.id);
+    }, 800); // Allow animation to complete before deleting
   };
 
   const handleEdit = () => {
@@ -110,7 +116,7 @@ function TodoItem({ todo, onToggle, onDelete, onUpdate, onShowDetails }) {
   }
 
   return (
-    <div className={`todo-item ${todo.completed ? 'completed' : ''}`}>
+    <div className={`todo-item ${todo.completed ? 'completed' : ''} ${isCompleting ? 'completing' : ''}`}>
       <div className="todo-content" onClick={() => onShowDetails && onShowDetails(todo)}>
         <div className="todo-checkbox" onClick={(e) => e.stopPropagation()}>
           <input
@@ -140,8 +146,8 @@ function TodoItem({ todo, onToggle, onDelete, onUpdate, onShowDetails }) {
         <button onClick={(e) => { e.stopPropagation(); handleEdit(); }} className="edit-btn" title="Edit">
           <Edit color="inherit" />
         </button>
-        <button onClick={(e) => { e.stopPropagation(); handleDelete(); }} className="delete-btn" title="Delete">
-          <Delete color="inherit" />
+        <button onClick={(e) => { e.stopPropagation(); handleComplete(); }} className="complete-btn" title="Complete Task">
+          <Check color="inherit" />
         </button>
       </div>
     </div>
