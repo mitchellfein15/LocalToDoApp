@@ -13,6 +13,7 @@ function createWindow() {
   const mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
+    icon: path.join(__dirname, '../../public/calendar_icon_176372.ico'),
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,

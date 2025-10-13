@@ -6,6 +6,11 @@ function Navbar({ activeTab, onTabChange, onSettingsClick }) {
   return (
     <nav className="navbar">
       <div className="nav-brand">
+          <img 
+            src="/calendar_icon_176372.ico" 
+            alt="Local Todo App" 
+            className="nav-logo"
+        />
         <h1>Local Todo App</h1>
       </div>
       

@@ -19,6 +19,18 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nav-logo {
+  height: 32px;
+  width: auto;
+  object-fit: contain;
+}
+
 .nav-brand h1 {
   margin: 0;
   font-size: 24px;
