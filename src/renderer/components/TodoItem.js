@@ -19,7 +19,7 @@ function TodoItem({ todo, onToggle, onDelete, onUpdate, onShowDetails }) {
     // Trigger the completion animation
     setTimeout(() => {
       onDelete(todo.id);
-    }, 800); // Allow animation to complete before deleting
+    }, 1000); // Allow animation to complete before deleting
   };
 
   const handleEdit = () => {

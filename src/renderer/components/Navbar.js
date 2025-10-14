@@ -1,17 +1,22 @@
 import React from 'react';
 import { SettingsIcon } from '../utils/mui-imports';
+import { useTheme } from '../context/ThemeContext';
+import cwruImage from '../../../public/CWRU_image.png';
+import cwruWhite from '../../../public/CWRU_white.png';
 import './Navbar.css';
 
 function Navbar({ activeTab, onTabChange, onSettingsClick }) {
+  const { isDarkMode } = useTheme();
+  
   return (
     <nav className="navbar">
       <div className="nav-brand">
-          <img 
-            src="/LocalToDoApp/public/calendar_icon_176372.ico" 
-            alt="Local Todo App" 
-            className="nav-logo"
+        <img 
+          src={isDarkMode ? cwruWhite : cwruImage} 
+          alt="CWRU" 
+          className="nav-logo"
         />
-        <h1>Local Todo App</h1>
+        <h1>CWRU</h1>
       </div>
       
       <div className="nav-tabs">

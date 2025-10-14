@@ -1,23 +1,22 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   entry: './src/renderer/index.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: '[name].js', // Use chunk names instead of fixed bundle.js
-    chunkFilename: '[name].[chunkhash].js', // For dynamic chunks
+    filename: '[name].js',
+    chunkFilename: '[name].[chunkhash].js',
   },
-  // Add performance configuration to handle large bundles
   performance: {
-    hints: false, // Disable warnings for Electron apps
-    maxEntrypointSize: 512000, // 500 KiB
-    maxAssetSize: 512000 // 500 KiB
+    hints: false,
+    maxEntrypointSize: 512000,
+    maxAssetSize: 512000
   },
-  // Add optimization settings
   optimization: {
-    usedExports: true, // Enable tree shaking
-    sideEffects: false, // Assume all modules are side-effect free
+    usedExports: true,
+    sideEffects: false,
     splitChunks: {
       chunks: 'all',
       cacheGroups: {
@@ -51,12 +50,33 @@ module.exports = {
       {
         test: /\.css$/,
         use: ['style-loader', 'css-loader']
+      },
+      {
+        test: /\.(png|jpg|jpeg|gif|svg|ico)$/,
+        use: {
+          loader: 'file-loader',
+          options: {
+            name: '[name].[ext]',
+            outputPath: 'images/'
+          }
+        }
       }
     ]
   },
   plugins: [
     new HtmlWebpackPlugin({
       template: './public/index.html'
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: 'public',
+          to: '.',
+          globOptions: {
+            ignore: ['**/index.html']
+          }
+        }
+      ]
     })
   ],
   resolve: {
@@ -69,4 +89,4 @@ module.exports = {
     port: 3000,
     hot: true
   }
-}; 
+};

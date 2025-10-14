@@ -148,6 +148,7 @@
   background: #e8f5e8;
   color: #2e7d32;
   transform: scale(1.1);
+  border-radius: 50%;
 }
 
 [data-theme="dark"] .todo-item .edit-btn,
@@ -170,6 +171,7 @@
   background: #1b5e20;
   color: #4caf50;
   transform: scale(1.1);
+  border-radius: 50%;
 }
 
 .todo-item.editing {
@@ -335,96 +337,108 @@
 
 /* Completion Animation Styles */
 .todo-item.completing {
-  animation: completeTask 0.8s ease-out forwards;
+  animation: analogue forwards 1s ease-out;
   pointer-events: none;
 }
 
-@keyframes completeTask {
+@keyframes analogue {
   0% {
     transform: scale(1);
     opacity: 1;
     background: #e8f5e8;
     border-color: #4caf50;
+    box-shadow: 0 0 0px rgba(76, 175, 80, 0);
+  }
+  
+  10% {
+    transform: scale(0.95);
+    background: #d0ebd0;
+    border-color: #43a047;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.2);
+  }
+  
+  20% {
+    transform: scale(0.85);
+    background: #a5d6a7;
+    border-color: #388e3c;
+    box-shadow: 0 0 8px rgba(76, 175, 80, 0.3);
   }
   
   30% {
-    transform: scale(1.05);
-    background: #c8e6c9;
+    transform: scale(0.7);
+    background: #81c784;
     border-color: #2e7d32;
-    box-shadow: 0 0 20px rgba(76, 175, 80, 0.3);
+    box-shadow: 0 0 10px rgba(76, 175, 80, 0.4);
+  }
+  
+  40% {
+    transform: scale(0.5);
+    background: #66bb6a;
+    border-color: #1b5e20;
+    box-shadow: 0 0 12px rgba(76, 175, 80, 0.5);
+  }
+  
+  50% {
+    transform: scale(0.3);
+    background: #4caf50;
+    border-color: #2e7d32;
+    box-shadow: 0 0 15px rgba(76, 175, 80, 0.6);
   }
   
   60% {
-    transform: scale(1.1) rotate(2deg);
-    background: #a5d6a7;
-    border-color: #1b5e20;
-    box-shadow: 0 0 30px rgba(76, 175, 80, 0.5);
+    transform: scale(0.15);
+    background: #43a047;
+    border-color: #388e3c;
+    box-shadow: 0 0 18px rgba(76, 175, 80, 0.7);
+  }
+  
+  70% {
+    transform: scale(0.08);
+    background: #388e3c;
+    border-color: #4caf50;
+    box-shadow: 0 0 20px rgba(76, 175, 80, 0.8);
   }
   
   80% {
-    transform: scale(1.15) rotate(-1deg);
-    opacity: 0.8;
-    background: #81c784;
-    border-color: #388e3c;
-    box-shadow: 0 0 40px rgba(76, 175, 80, 0.7);
+    transform: scale(0.04);
+    background: #2e7d32;
+    border-color: #66bb6a;
+    box-shadow: 0 0 22px rgba(76, 175, 80, 0.9);
+  }
+  
+  90% {
+    transform: scale(0.01);
+    background: #1b5e20;
+    border-color: #81c784;
+    box-shadow: 0 0 25px rgba(76, 175, 80, 0.95);
+  }
+  
+  95% {
+    transform: scale(0.005);
+    background: #0d4f0d;
+    border-color: #a5d6a7;
+    box-shadow: 0 0 30px rgba(76, 175, 80, 0.98);
   }
   
   100% {
-    transform: scale(1.2) rotate(0deg) translateY(-20px);
+    transform: scale(0);
+    background: #004d00;
+    border-color: #c8e6c9;
+    box-shadow: 0 0 35px rgba(76, 175, 80, 1);
     opacity: 0;
-    background: #66bb6a;
-    border-color: #2e7d32;
-    box-shadow: 0 0 50px rgba(76, 175, 80, 0.9);
   }
 }
 
 [data-theme="dark"] .todo-item.completing {
-  animation: completeTaskDark 0.8s ease-out forwards;
-}
-
-@keyframes completeTaskDark {
-  0% {
-    transform: scale(1);
-    opacity: 1;
-    background: #1b5e20;
-    border-color: #4caf50;
-  }
-  
-  30% {
-    transform: scale(1.05);
-    background: #2e7d32;
-    border-color: #66bb6a;
-    box-shadow: 0 0 20px rgba(76, 175, 80, 0.4);
-  }
-  
-  60% {
-    transform: scale(1.1) rotate(2deg);
-    background: #388e3c;
-    border-color: #81c784;
-    box-shadow: 0 0 30px rgba(76, 175, 80, 0.6);
-  }
-  
-  80% {
-    transform: scale(1.15) rotate(-1deg);
-    opacity: 0.8;
-    background: #43a047;
-    border-color: #a5d6a7;
-    box-shadow: 0 0 40px rgba(76, 175, 80, 0.8);
-  }
-  
-  100% {
-    transform: scale(1.2) rotate(0deg) translateY(-20px);
-    opacity: 0;
-    background: #4caf50;
-    border-color: #c8e6c9;
-    box-shadow: 0 0 50px rgba(76, 175, 80, 1);
-  }
+  animation: analogue forwards 1s ease-out;
 }
 
 /* Completion button pulse animation on hover */
 .todo-item .complete-btn {
   position: relative;
   overflow: hidden;
+  border-radius: 50%;
+  background: transparent;
 }
 
 .todo-item .complete-btn::before {
@@ -437,7 +451,7 @@
   background: rgba(76, 175, 80, 0.3);
   border-radius: 50%;
   transform: translate(-50%, -50%);
-  transition: width 0.3s ease, height 0.3s ease;
+  transition: width 0.2s ease-in-out, height 0.2s ease-in-out;
 }
 
 .todo-item .complete-btn:hover::before {
