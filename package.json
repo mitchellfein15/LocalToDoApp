@@ -28,7 +28,7 @@
     ],
     "win": {
       "target": "nsis",
-      "icon": "public/calendar_icon_176372.ico"
+      "icon": "public/icons/win/icon.ico"
     }
   },
   "keywords": [
