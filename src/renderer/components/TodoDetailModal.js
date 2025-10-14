@@ -2,7 +2,7 @@ import React from 'react';
 import { Dialog, DialogTitle, DialogContent, Typography, Box, Divider, Chip } from '../utils/mui-imports';
 import './TodoDetailModal.css';
 
-function TodoDetailModal({ open, onClose, todo, onToggle, onDelete, onUpdate }) {
+function TodoDetailModal({ open, onClose, todo, onDelete, onUpdate }) {
   if (!todo) return null;
 
   const formatDate = (dateString) => {
@@ -38,25 +38,23 @@ function TodoDetailModal({ open, onClose, todo, onToggle, onDelete, onUpdate }) 
       const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
       const dueStart = new Date(dueDateObj.getFullYear(), dueDateObj.getMonth(), dueDateObj.getDate());
       
-      return dueStart < todayStart && !todo.completed;
+      return dueStart < todayStart;
     }
     
     const today = new Date();
     const due = new Date(dueDate);
     const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
     const dueStart = new Date(due.getFullYear(), due.getMonth(), due.getDate());
-    return dueStart < todayStart && !todo.completed;
+    return dueStart < todayStart;
   };
 
   const getStatusText = () => {
-    if (todo.completed) return 'Completed';
     if (isOverdue(todo.due_date)) return 'Overdue';
     if (todo.due_date) return 'Pending';
     return 'No due date';
   };
 
   const getStatusColor = () => {
-    if (todo.completed) return '#4caf50';
     if (isOverdue(todo.due_date)) return '#f44336';
     if (todo.due_date) return '#ff9800';
     return '#9e9e9e';
@@ -102,7 +100,7 @@ function TodoDetailModal({ open, onClose, todo, onToggle, onDelete, onUpdate }) 
             className={`todo-due-date ${isOverdue(todo.due_date) ? 'overdue' : ''}`}
           >
             {todo.due_date ? formatDate(todo.due_date) : 'No due date set'}
-            {isOverdue(todo.due_date) && !todo.completed && (
+            {isOverdue(todo.due_date) && (
               <span className="overdue-indicator"> (Overdue)</span>
             )}
           </Typography>

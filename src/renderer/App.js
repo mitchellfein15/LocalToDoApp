@@ -31,10 +31,6 @@ function App() {
     setSelectedTodo(null);
   };
 
-  const handleToggleTodo = (todoId) => {
-    handleCloseTodoModal();
-  };
-
   const handleDeleteTodo = (todoId) => {
     handleCloseTodoModal();
   };
@@ -56,7 +52,6 @@ function App() {
           {activeTab === 'todo' && (
             <TodoList 
               onShowDetails={handleShowTodoDetails}
-              onToggle={handleToggleTodo}
               onDelete={handleDeleteTodo}
               onUpdate={handleUpdateTodo}
             />
@@ -64,7 +59,6 @@ function App() {
           {activeTab === 'calendar' && (
             <Calendar 
               onShowDetails={handleShowTodoDetails}
-              onToggle={handleToggleTodo}
               onDelete={handleDeleteTodo}
               onUpdate={handleUpdateTodo}
             />
@@ -80,7 +74,6 @@ function App() {
           open={showTodoModal}
           onClose={handleCloseTodoModal}
           todo={selectedTodo}
-          onToggle={handleToggleTodo}
           onDelete={handleDeleteTodo}
           onUpdate={handleUpdateTodo}
         />

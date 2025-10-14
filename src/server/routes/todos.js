@@ -17,7 +17,5 @@ router.put('/:id', TodoController.updateTodo);
 // DELETE todo
 router.delete('/:id', TodoController.deleteTodo);
 
-// PATCH toggle todo completion
-router.patch('/:id/toggle', TodoController.toggleTodo);
 
 module.exports = router; 

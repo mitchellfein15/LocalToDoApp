@@ -133,46 +133,6 @@ class TodoController {
     db.close();
   }
 
-  // Toggle todo completion
-  static toggleTodo(req, res) {
-    const db = TodoController.getDb();
-    const { id } = req.params;
-    
-    // First get the current todo
-    db.get('SELECT * FROM todos WHERE id = ?', [id], (err, row) => {
-      if (err) {
-        res.status(500).json({ error: err.message });
-        return;
-      }
-      
-      if (!row) {
-        res.status(404).json({ error: 'Todo not found' });
-        return;
-      }
-      
-      // Toggle the completed status
-      const newCompleted = row.completed ? 0 : 1;
-      
-      db.run('UPDATE todos SET completed = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?', 
-        [newCompleted, id], function(err) {
-        if (err) {
-          res.status(500).json({ error: err.message });
-          return;
-        }
-        
-        // Get the updated todo
-        db.get('SELECT * FROM todos WHERE id = ?', [id], (err, updatedRow) => {
-          if (err) {
-            res.status(500).json({ error: err.message });
-            return;
-          }
-          res.json(updatedRow);
-        });
-      });
-    });
-    
-    db.close();
-  }
 }
 
 module.exports = TodoController; 

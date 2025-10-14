@@ -2,16 +2,13 @@ import React, { useState } from 'react';
 import { Edit, Delete, Check } from '../utils/mui-imports';
 import './TodoItem.css';
 
-function TodoItem({ todo, onToggle, onDelete, onUpdate, onShowDetails }) {
+function TodoItem({ todo, onDelete, onUpdate, onShowDetails }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(todo.title);
   const [editDescription, setEditDescription] = useState(todo.description || '');
   const [editDueDate, setEditDueDate] = useState(todo.due_date || '');
   const [isCompleting, setIsCompleting] = useState(false);
 
-  const handleToggle = () => {
-    onToggle(todo.id);
-  };
 
   const handleComplete = () => {
     setIsCompleting(true);
@@ -66,14 +63,14 @@ function TodoItem({ todo, onToggle, onDelete, onUpdate, onShowDetails }) {
       const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
       const dueStart = new Date(dueDateObj.getFullYear(), dueDateObj.getMonth(), dueDateObj.getDate());
       
-      return dueStart < todayStart && !todo.completed;
+      return dueStart < todayStart;
     }
     
     const today = new Date();
     const due = new Date(dueDate);
     const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
     const dueStart = new Date(due.getFullYear(), due.getMonth(), due.getDate());
-    return dueStart < todayStart && !todo.completed;
+    return dueStart < todayStart;
   };
 
   if (isEditing) {
@@ -116,16 +113,8 @@ function TodoItem({ todo, onToggle, onDelete, onUpdate, onShowDetails }) {
   }
 
   return (
-    <div className={`todo-item ${todo.completed ? 'completed' : ''} ${isCompleting ? 'completing' : ''}`}>
+    <div className={`todo-item ${isCompleting ? 'completing' : ''}`}>
       <div className="todo-content" onClick={() => onShowDetails && onShowDetails(todo)}>
-        <div className="todo-checkbox" onClick={(e) => e.stopPropagation()}>
-          <input
-            type="checkbox"
-            checked={todo.completed}
-            onChange={handleToggle}
-          />
-        </div>
-        
         <div className="todo-details">
           <h3 className="todo-title">{todo.title}</h3>
           {todo.description && (

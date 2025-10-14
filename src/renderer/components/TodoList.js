@@ -4,7 +4,7 @@ import TodoForm from './TodoForm';
 import ApiService from '../services/api';
 import './TodoList.css';
 
-function TodoList({ onShowDetails, onToggle, onDelete, onUpdate }) {
+function TodoList({ onShowDetails, onDelete, onUpdate }) {
   const [todos, setTodos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -38,20 +38,6 @@ function TodoList({ onShowDetails, onToggle, onDelete, onUpdate }) {
     }
   };
 
-  const handleToggleTodo = async (id) => {
-    try {
-      const updatedTodo = await ApiService.toggleTodo(id);
-      setTodos(todos.map(todo => 
-        todo.id === id ? updatedTodo : todo
-      ));
-      // Call the parent handler if provided
-      if (onToggle) {
-        onToggle(id);
-      }
-    } catch (err) {
-      console.error('Error updating todo:', err);
-    }
-  };
 
   const handleDeleteTodo = async (id) => {
     try {
@@ -117,7 +103,6 @@ function TodoList({ onShowDetails, onToggle, onDelete, onUpdate }) {
             <TodoItem
               key={todo.id}
               todo={todo}
-              onToggle={handleToggleTodo}
               onDelete={handleDeleteTodo}
               onUpdate={handleUpdateTodo}
               onShowDetails={onShowDetails}

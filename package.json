@@ -4,11 +4,11 @@
   "description": "A local todo list application",
   "main": "src/main/main.js",
   "scripts": {
-    "start": "electron . --disable-gpu-cache --disable-disk-cache --disable-application-cache",
+    "start": "electron . --disable-gpu-cache --disable-disk-cache --disable-application-cache --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-renderer-backgrounding",
     "server": "node src/server/server.js",
     "dev": "concurrently \"npm run dev:renderer\" \"npm run server\" \"wait-on http://localhost:3000 && npm run dev:electron\"",
     "dev:renderer": "webpack serve --mode development",
-    "dev:electron": "electron . --disable-gpu-cache --disable-disk-cache --disable-application-cache",
+    "dev:electron": "electron . --disable-gpu-cache --disable-disk-cache --disable-application-cache --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-renderer-backgrounding",
     "build": "webpack --mode production",
     "dist": "npm run build && electron-builder",
     "dist:win": "npm run build && electron-builder --win"

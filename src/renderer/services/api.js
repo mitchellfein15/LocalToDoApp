@@ -56,12 +56,6 @@ class ApiService {
     });
   }
 
-  // Toggle todo completion
-  static async toggleTodo(id) {
-    return this.request(`/todos/${id}/toggle`, {
-      method: 'PATCH',
-    });
-  }
 }
 
 export default ApiService; 

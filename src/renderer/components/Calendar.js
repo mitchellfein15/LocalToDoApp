@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ApiService from '../services/api';
 import './Calendar.css';
 
-function Calendar({ onToggle, onDelete, onUpdate, onShowDetails }) {
+function Calendar({ onDelete, onUpdate, onShowDetails }) {
   const [todos, setTodos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -26,21 +26,6 @@ function Calendar({ onToggle, onDelete, onUpdate, onShowDetails }) {
     }
   };
 
-  const handleToggleTodo = async (id) => {
-    try {
-      const updatedTodo = await ApiService.toggleTodo(id);
-      setTodos(todos.map(todo => 
-        todo.id === id ? updatedTodo : todo
-      ));
-      // Call the parent handler if provided
-      if (onToggle) {
-        onToggle(id);
-      }
-    } catch (err) {
-      setError('Failed to update todo');
-      console.error('Error updating todo:', err);
-    }
-  };
 
   const handleDeleteTodo = async (id) => {
     try {
@@ -156,8 +141,7 @@ function Calendar({ onToggle, onDelete, onUpdate, onShowDetails }) {
   for (let day = 1; day <= daysInMonth; day++) {
     const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
     const todosForDay = getTodosForDate(date);
-    const dayTodos = todosForDay.filter(todo => !todo.completed);
-    const completedTodos = todosForDay.filter(todo => todo.completed);
+    const dayTodos = todosForDay;
     
     days.push(
       <div 
@@ -178,10 +162,10 @@ function Calendar({ onToggle, onDelete, onUpdate, onShowDetails }) {
               onClick={() => onShowDetails && onShowDetails(todo)}
             >
               <div className="todo-simple-content">
-                <span className={`todo-simple-title ${todo.completed ? 'completed' : ''}`}>
+                <span className="todo-simple-title">
                   {todo.title}
                 </span>
-                {isOverdue(todo.due_date) && !todo.completed && (
+                {isOverdue(todo.due_date) && (
                   <span className="todo-overdue-indicator">Overdue</span>
                 )}
               </div>
