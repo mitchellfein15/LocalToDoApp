@@ -10,7 +10,8 @@ class TodoController {
   static getAllTodos(req, res) {
     const db = TodoController.getDb();
     
-    db.all('SELECT * FROM todos ORDER BY created_at DESC', (err, rows) => {
+    // Sort by due_date ASC (closest first), with NULL values at the end
+    db.all('SELECT * FROM todos ORDER BY CASE WHEN due_date IS NULL THEN 1 ELSE 0 END, due_date ASC', (err, rows) => {
       if (err) {
         res.status(500).json({ error: err.message });
         return;
