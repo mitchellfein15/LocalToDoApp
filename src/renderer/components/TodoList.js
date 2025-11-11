@@ -9,6 +9,26 @@ function TodoList({ onShowDetails, onDelete, onUpdate }) {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
 
+  // Sort todos by due date (closest first), with null/empty due dates at the end
+  const sortTodosByDueDate = (todosList) => {
+    return [...todosList].sort((a, b) => {
+      // If both have due dates, sort by date (ascending - closest first)
+      if (a.due_date && b.due_date) {
+        return new Date(a.due_date) - new Date(b.due_date);
+      }
+      // If only a has a due date, it comes first
+      if (a.due_date && !b.due_date) {
+        return -1;
+      }
+      // If only b has a due date, it comes first
+      if (!a.due_date && b.due_date) {
+        return 1;
+      }
+      // If neither has a due date, maintain original order
+      return 0;
+    });
+  };
+
   // Load todos on component mount
   useEffect(() => {
     loadTodos();
@@ -18,10 +38,8 @@ function TodoList({ onShowDetails, onDelete, onUpdate }) {
     try {
       setLoading(true);
       const data = await ApiService.getTodos();
-      setTodos(data);
-      setError(null);
+      setTodos(sortTodosByDueDate(data));
     } catch (err) {
-      setError('Failed to load todos');
       console.error('Error loading todos:', err);
     } finally {
       setLoading(false);
@@ -31,7 +49,7 @@ function TodoList({ onShowDetails, onDelete, onUpdate }) {
   const handleCreateTodo = async (todoData) => {
     try {
       const newTodo = await ApiService.createTodo(todoData);
-      setTodos([newTodo, ...todos]);
+      setTodos(sortTodosByDueDate([...todos, newTodo]));
       setShowForm(false);
     } catch (err) {
       console.error('Error creating todo:', err);
@@ -55,9 +73,10 @@ function TodoList({ onShowDetails, onDelete, onUpdate }) {
   const handleUpdateTodo = async (id, todoData) => {
     try {
       const updatedTodo = await ApiService.updateTodo(id, todoData);
-      setTodos(todos.map(todo => 
+      const updatedTodos = todos.map(todo => 
         todo.id === id ? updatedTodo : todo
-      ));
+      );
+      setTodos(sortTodosByDueDate(updatedTodos));
       // Call the parent handler if provided
       if (onUpdate) {
         onUpdate(id, todoData);
