@@ -175,3 +175,64 @@
   display: flex;
   gap: 6px;
 }
+
+/* =========================================
+   Dark Mode Overrides for Widgets
+   ========================================= */
+
+/* --- Notes Form --- */
+[data-theme="dark"] .notes-title-input,
+[data-theme="dark"] .notes-content-input {
+  background-color: #2d2d2d; /* Matches dark card background */
+  color: #ffffff;            /* White text */
+  border-color: #555;        /* Darker border */
+}
+
+/* Adjust placeholder text color in dark mode */
+[data-theme="dark"] .notes-title-input::placeholder,
+[data-theme="dark"] .notes-content-input::placeholder {
+  color: #a0a0a0;
+}
+
+/* --- Saved Notes Items --- */
+[data-theme="dark"] .note-item {
+  border-color: #555;
+  background-color: #363636; /* Slightly lighter than the card for contrast */
+}
+
+[data-theme="dark"] .note-item h4,
+[data-theme="dark"] .note-item p {
+  color: #ffffff;
+}
+
+/* --- Buttons inside widgets --- */
+[data-theme="dark"] .notes-actions button,
+[data-theme="dark"] .note-item-actions button,
+[data-theme="dark"] .timer-actions button {
+  background-color: #444;
+  color: #ffffff;
+}
+
+[data-theme="dark"] .notes-actions button:hover,
+[data-theme="dark"] .note-item-actions button:hover,
+[data-theme="dark"] .timer-actions button:hover {
+  background-color: #555;
+}
+
+/* --- Weather Widget --- */
+[data-theme="dark"] .weather-temp {
+  color: #b0b0b0;
+}
+
+[data-theme="dark"] .weather-sub {
+  color: #b0b0b0;
+}
+
+/* --- Quick Stats Widget --- */
+[data-theme="dark"] .stat-line span {
+  color: #b0b0b0; /* Light gray for the labels */
+}
+
+[data-theme="dark"] .stat-line strong {
+  color: #ffffff; /* Bright white for the numbers */
+}
