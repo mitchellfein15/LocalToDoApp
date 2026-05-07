@@ -18,6 +18,12 @@ function App() {
   const [selectedTodo, setSelectedTodo] = useState(null);
   const [showTodoModal, setShowTodoModal] = useState(false);
 
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+  
+  const triggerRefresh = () => {
+    setRefreshTrigger(prev => prev + 1);
+  };
+
   const handleSettingsClick = () => {
     setShowSettings(true);
   };
@@ -34,6 +40,7 @@ function App() {
 
   const handleDeleteTodo = (todoId) => {
     handleCloseTodoModal();
+    triggerRefresh(); 
   };
 
   const handleUpdateTodo = () => {
@@ -48,6 +55,7 @@ function App() {
             onShowDetails={handleShowTodoDetails}
             onDelete={handleDeleteTodo}
             onUpdate={handleUpdateTodo}
+            onTodosChange={triggerRefresh}
           />
         </div>
       );
@@ -60,6 +68,7 @@ function App() {
             onShowDetails={handleShowTodoDetails}
             onDelete={handleDeleteTodo}
             onUpdate={handleUpdateTodo}
+            refreshTrigger={refreshTrigger}
             showTitle
           />
         </div>
@@ -83,6 +92,7 @@ function App() {
             onShowDetails={handleShowTodoDetails}
             onDelete={handleDeleteTodo}
             onUpdate={handleUpdateTodo}
+            onTodosChange={triggerRefresh}
           />
         </div>
 
@@ -93,6 +103,7 @@ function App() {
             onShowDetails={handleShowTodoDetails}
             onDelete={handleDeleteTodo}
             onUpdate={handleUpdateTodo}
+            refreshTrigger={refreshTrigger}
           />
         </div>
 

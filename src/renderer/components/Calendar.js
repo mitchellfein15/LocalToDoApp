@@ -7,7 +7,7 @@ const INITIAL_MONTHS_AFTER = 4;
 const MONTH_BATCH_SIZE = 3;
 const SCROLL_THRESHOLD_PX = 240;
 
-function Calendar({ onDelete, onUpdate, onShowDetails, compact = false, showTitle = true }) {
+function Calendar({ onDelete, onUpdate, onShowDetails, refreshTrigger,compact = false, showTitle = true }) {
   const [todos, setTodos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -26,6 +26,10 @@ function Calendar({ onDelete, onUpdate, onShowDetails, compact = false, showTitl
   const isLoadingMoreRef = useRef(false);
 
   useEffect(() => {
+    loadTodos(refreshTrigger > 0); 
+  }, [refreshTrigger]);
+
+  useEffect(() => {
     loadTodos();
   }, []);
 
@@ -37,9 +41,9 @@ function Calendar({ onDelete, onUpdate, onShowDetails, compact = false, showTitl
     }
   }, [loading]);
 
-  const loadTodos = async () => {
+  const loadTodos = async (isSilent = false) => {
     try {
-      setLoading(true);
+      if (!isSilent) setLoading(true);
       const data = await ApiService.getTodos();
       setTodos(data);
       setError(null);
@@ -47,7 +51,7 @@ function Calendar({ onDelete, onUpdate, onShowDetails, compact = false, showTitl
       setError('Failed to load todos');
       console.error('Error loading todos:', err);
     } finally {
-      setLoading(false);
+      if (!isSilent) setLoading(false);
     }
   };
 

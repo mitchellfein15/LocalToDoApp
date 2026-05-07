@@ -4,7 +4,7 @@ import TodoForm from './TodoForm';
 import ApiService from '../services/api';
 import './TodoList.css';
 
-function TodoList({ onShowDetails, onDelete, onUpdate, compact = false }) {
+function TodoList({ onShowDetails, onDelete, onUpdate, onTodosChange, compact = false }) {
   const [todos, setTodos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -51,6 +51,7 @@ function TodoList({ onShowDetails, onDelete, onUpdate, compact = false }) {
       const newTodo = await ApiService.createTodo(todoData);
       setTodos(sortTodosByDueDate([...todos, newTodo]));
       setShowForm(false);
+      if (onTodosChange) onTodosChange();
     } catch (err) {
       console.error('Error creating todo:', err);
     }
@@ -65,6 +66,7 @@ function TodoList({ onShowDetails, onDelete, onUpdate, compact = false }) {
       if (onDelete) {
         onDelete(id);
       }
+      if (onTodosChange) onTodosChange();
     } catch (err) {
       console.error('Error deleting todo:', err);
     }
@@ -77,6 +79,7 @@ function TodoList({ onShowDetails, onDelete, onUpdate, compact = false }) {
       if (onUpdate) {
         onUpdate(id, { completed: true });
       }
+      if (onTodosChange) onTodosChange();
     } catch (err) {
       console.error('Error completing todo:', err);
     }
@@ -93,6 +96,7 @@ function TodoList({ onShowDetails, onDelete, onUpdate, compact = false }) {
       if (onUpdate) {
         onUpdate(id, todoData);
       }
+      if (onTodosChange) onTodosChange();
     } catch (err) {
       console.error('Error updating todo:', err);
     }
