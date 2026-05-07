@@ -67,6 +67,12 @@ class ApiService {
     return this.request(`/stats/heatmap${query}`);
   }
 
+  static async resetStats() {
+    return this.request('/stats/reset', {
+      method: 'DELETE',
+    });
+  }
+
   static async getNotes() {
     return this.request('/notes');
   }

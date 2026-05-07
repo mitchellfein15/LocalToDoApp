@@ -30,6 +30,23 @@ class StatsController {
 
     db.close();
   }
+
+  static resetStats(req, res) {
+    const db = StatsController.getDb();
+  
+    db.run(
+      `UPDATE todos SET completed_at = NULL WHERE completed = 1`,
+      function (err) {
+        if (err) {
+          res.status(500).json({ error: err.message });
+          return;
+        }
+        res.json({ message: 'Statistics reset successfully', changes: this.changes });
+      }
+    );
+
+    db.close();
+  }
 }
 
 module.exports = StatsController;
