@@ -54,8 +54,25 @@ function HeatmapCard({ refreshTrigger }) {
     return map;
   }, [rows]);
 
-  const maxCount = useMemo(() => {
-    return Object.values(countByDate).reduce((max, value) => Math.max(max, value), 0);
+  const thresholds = useMemo(() => {
+    const counts = Object.values(countByDate)
+      .filter((count) => count > 0)
+      .sort((a, b) => a - b);
+
+    if (counts.length === 0) {
+      return { p25: 0, p50: 0, p75: 0 };
+    }
+
+    const getPercentile = (percentile) => {
+      const index = Math.floor((counts.length - 1) * percentile);
+      return counts[index];
+    };
+
+    return {
+      p25: getPercentile(0.25),
+      p50: getPercentile(0.50),
+      p75: getPercentile(0.75),
+    };
   }, [countByDate]);
 
   const monthsData = useMemo(() => {
@@ -78,8 +95,16 @@ function HeatmapCard({ refreshTrigger }) {
       const key = toDateKey(cursor);
       const count = countByDate[key] || 0;
       let level = 0;
-      if (count > 0 && maxCount > 0) {
-        level = Math.min(4, Math.ceil((count / maxCount) * 4));
+      if (count > 0) {
+        if (count <= thresholds.p25) {
+          level = 1;
+        } else if (count <= thresholds.p50) {
+          level = 2;
+        } else if (count <= thresholds.p75) {
+          level = 3;
+        } else {
+          level = 4;
+        }
       }
 
       months[cursor.getMonth()].push(
@@ -99,7 +124,7 @@ function HeatmapCard({ refreshTrigger }) {
         <div className="heatmap-month-grid">{days}</div>
       </div>
     ));
-  }, [countByDate, maxCount, year]);
+  }, [countByDate, thresholds, year]);
 
   if (loading) {
     return <div className="widget-loading">Loading heatmap...</div>;

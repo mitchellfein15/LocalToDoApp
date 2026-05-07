@@ -255,8 +255,11 @@
 
 .month-label {
   font-size: 0.8rem;
-  color: #ebedf0; 
   font-weight: 600;
+}
+
+[data-theme="dark"] .month-label{
+  color: #ebedf0; 
 }
 
 .heatmap-month-grid {
