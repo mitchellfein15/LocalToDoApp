@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Edit, Delete, Check } from '../utils/mui-imports';
 import './TodoItem.css';
 
-function TodoItem({ todo, onDelete, onUpdate, onShowDetails }) {
+function TodoItem({ todo, onDelete, onUpdate, onShowDetails, onComplete }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(todo.title);
   const [editDescription, setEditDescription] = useState(todo.description || '');
@@ -15,6 +15,10 @@ function TodoItem({ todo, onDelete, onUpdate, onShowDetails }) {
     
     // Trigger the completion animation
     setTimeout(() => {
+      if (onComplete) {
+        onComplete(todo.id);
+        return;
+      }
       onDelete(todo.id);
     }, 1000); // Allow animation to complete before deleting
   };
@@ -137,6 +141,9 @@ function TodoItem({ todo, onDelete, onUpdate, onShowDetails }) {
         </button>
         <button onClick={(e) => { e.stopPropagation(); handleComplete(); }} className="complete-btn" title="Complete Task">
           <Check color="inherit" />
+        </button>
+        <button onClick={(e) => { e.stopPropagation(); onDelete(todo.id); }} className="delete-btn" title="Delete Task">
+          <Delete color="inherit" />
         </button>
       </div>
     </div>

@@ -4,7 +4,7 @@ import TodoForm from './TodoForm';
 import ApiService from '../services/api';
 import './TodoList.css';
 
-function TodoList({ onShowDetails, onDelete, onUpdate }) {
+function TodoList({ onShowDetails, onDelete, onUpdate, compact = false }) {
   const [todos, setTodos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -70,6 +70,18 @@ function TodoList({ onShowDetails, onDelete, onUpdate }) {
     }
   };
 
+  const handleCompleteTodo = async (id) => {
+    try {
+      await ApiService.completeTodo(id);
+      setTodos(todos.filter(todo => todo.id !== id));
+      if (onUpdate) {
+        onUpdate(id, { completed: true });
+      }
+    } catch (err) {
+      console.error('Error completing todo:', err);
+    }
+  };
+
   const handleUpdateTodo = async (id, todoData) => {
     try {
       const updatedTodo = await ApiService.updateTodo(id, todoData);
@@ -91,7 +103,7 @@ function TodoList({ onShowDetails, onDelete, onUpdate }) {
   }
 
   return (
-    <div className="todo-list">
+    <div className={`todo-list ${compact ? 'todo-list-compact' : ''}`}>
       <div className="todo-header">
         <div className="header-actions">
           <button 
@@ -124,6 +136,7 @@ function TodoList({ onShowDetails, onDelete, onUpdate }) {
               todo={todo}
               onDelete={handleDeleteTodo}
               onUpdate={handleUpdateTodo}
+              onComplete={handleCompleteTodo}
               onShowDetails={onShowDetails}
             />
           ))

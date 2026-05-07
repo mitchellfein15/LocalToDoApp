@@ -7,7 +7,7 @@ const INITIAL_MONTHS_AFTER = 4;
 const MONTH_BATCH_SIZE = 3;
 const SCROLL_THRESHOLD_PX = 240;
 
-function Calendar({ onDelete, onUpdate, onShowDetails }) {
+function Calendar({ onDelete, onUpdate, onShowDetails, compact = false, showTitle = true }) {
   const [todos, setTodos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -290,13 +290,15 @@ function Calendar({ onDelete, onUpdate, onShowDetails }) {
   }
 
   return (
-    <div className="calendar">
-      <div className="calendar-header">
-        <h2 className="calendar-title">Calendar</h2>
-        <button onClick={goToToday} className="today-btn">
-          Today
-        </button>
-      </div>
+    <div className={`calendar ${compact ? 'calendar-compact' : ''}`}>
+      {showTitle && (
+        <div className="calendar-header">
+          <h2 className="calendar-title">Calendar</h2>
+          <button onClick={goToToday} className="today-btn">
+            Today
+          </button>
+        </div>
+      )}
 
       {error && (
         <div className="error-message">

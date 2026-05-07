@@ -9,6 +9,11 @@
   width: 100%;
 }
 
+.todo-list.todo-list-compact {
+  border-radius: 12px;
+  box-shadow: none;
+}
+
 [data-theme="dark"] .todo-list {
   background: #2d2d2d;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
@@ -76,6 +81,10 @@
   max-height: 500px;
   overflow-y: auto;
   transition: background-color 0.3s ease;
+}
+
+.todo-list-compact .todos-container {
+  max-height: 500px;
 }
 
 [data-theme="dark"] .todos-container {

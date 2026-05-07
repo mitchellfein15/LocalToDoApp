@@ -1,0 +1,177 @@
+.widget-loading {
+  color: #6c757d;
+  padding: 12px 0;
+}
+
+[data-theme="dark"] .widget-loading {
+  color: #b0b0b0;
+}
+
+.heatmap-widget {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.heatmap-grid {
+  display: grid;
+  grid-template-columns: repeat(53, 1fr);
+  gap: 3px;
+}
+
+.heatmap-day {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  background: #ebedf0;
+}
+
+[data-theme="dark"] .heatmap-day {
+  background: #3a3a3a;
+}
+
+.heatmap-day.level-1 {
+  background: #9be9a8;
+}
+
+.heatmap-day.level-2 {
+  background: #40c463;
+}
+
+.heatmap-day.level-3 {
+  background: #30a14e;
+}
+
+.heatmap-day.level-4 {
+  background: #216e39;
+}
+
+.heatmap-legend {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #6c757d;
+}
+
+.notes-widget {
+  display: grid;
+  gap: 10px;
+}
+
+.notes-title-input,
+.notes-content-input {
+  width: 100%;
+  border: 1px solid #d4d8dd;
+  border-radius: 8px;
+  padding: 8px;
+  font-family: inherit;
+}
+
+.notes-content-input {
+  resize: vertical;
+}
+
+.notes-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.notes-actions button,
+.note-item-actions button,
+.timer-actions button {
+  border: none;
+  border-radius: 8px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.notes-list {
+  max-height: 320px;
+  overflow-y: auto;
+  display: grid;
+  gap: 8px;
+}
+
+.note-item {
+  border: 1px solid #e1e5e9;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.note-item h4 {
+  margin: 0 0 6px;
+}
+
+.note-item p {
+  margin: 0 0 8px;
+  white-space: pre-wrap;
+}
+
+.note-item-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.weather-widget {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.weather-temp {
+  font-size: 30px;
+  font-weight: 700;
+}
+
+.weather-forecast {
+  display: flex;
+  gap: 12px;
+  color: #6c757d;
+}
+
+.stats-widget {
+  display: grid;
+  gap: 8px;
+}
+
+.stat-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.timer-floating-widget {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 200;
+  background: #ffffff;
+  border: 1px solid #e1e5e9;
+  border-radius: 12px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.16);
+  padding: 10px 12px;
+  min-width: 150px;
+}
+
+[data-theme="dark"] .timer-floating-widget {
+  background: #2d2d2d;
+  border-color: #555;
+}
+
+.timer-label {
+  font-size: 12px;
+  color: #6c757d;
+}
+
+.timer-value {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.timer-actions {
+  margin-top: 8px;
+  display: flex;
+  gap: 6px;
+}

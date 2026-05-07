@@ -56,6 +56,40 @@ class ApiService {
     });
   }
 
+  static async completeTodo(id) {
+    return this.request(`/todos/${id}/complete`, {
+      method: 'PATCH',
+    });
+  }
+
+  static async getHeatmap(year) {
+    const query = year ? `?year=${year}` : '';
+    return this.request(`/stats/heatmap${query}`);
+  }
+
+  static async getNotes() {
+    return this.request('/notes');
+  }
+
+  static async createNote(note) {
+    return this.request('/notes', {
+      method: 'POST',
+      body: JSON.stringify(note),
+    });
+  }
+
+  static async updateNote(id, note) {
+    return this.request(`/notes/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(note),
+    });
+  }
+
+  static async deleteNote(id) {
+    return this.request(`/notes/${id}`, {
+      method: 'DELETE',
+    });
+  }
 }
 
 export default ApiService; 

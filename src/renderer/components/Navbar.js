@@ -5,45 +5,50 @@ import cwruImage from '../../../public/CWRU_image.png';
 import cwruWhite from '../../../public/CWRU_white.png';
 import './Navbar.css';
 
-function Navbar({ activeTab, onTabChange, onSettingsClick }) {
+const NAV_ITEMS = [
+  { key: 'dashboard', label: 'Dashboard' },
+  { key: 'todo', label: 'Todos' },
+  { key: 'calendar', label: 'Calendar' },
+  { key: 'notes', label: 'Notes' }
+];
+
+function Navbar({ activeView, onViewChange, onSettingsClick }) {
   const { isDarkMode } = useTheme();
   
   return (
-    <nav className="navbar">
-      <div className="nav-brand">
+    <aside className="sidebar-nav">
+      <div className="sidebar-brand">
         <img 
           src={isDarkMode ? cwruWhite : cwruImage} 
           alt="CWRU" 
-          className="nav-logo"
+          className="sidebar-logo"
         />
-        <h1>CWRU</h1>
+        <h1>LocalDash</h1>
       </div>
       
-      <div className="nav-tabs">
-        <button 
-          className={`nav-tab ${activeTab === 'todo' ? 'active' : ''}`}
-          onClick={() => onTabChange('todo')}
-        >
-          Todo
-        </button>
-        <button 
-          className={`nav-tab ${activeTab === 'calendar' ? 'active' : ''}`}
-          onClick={() => onTabChange('calendar')}
-        >
-          Calendar
-        </button>
-      </div>
+      <nav className="sidebar-links">
+        {NAV_ITEMS.map((item) => (
+          <button
+            key={item.key}
+            className={`sidebar-link ${activeView === item.key ? 'active' : ''}`}
+            onClick={() => onViewChange(item.key)}
+          >
+            {item.label}
+          </button>
+        ))}
+      </nav>
       
-      <div className="nav-actions">
+      <div className="sidebar-actions">
         <button 
-          className="settings-btn"
+          className="sidebar-settings-btn"
           onClick={onSettingsClick}
           title="Settings"
         >
           <SettingsIcon color="inherit" />
+          <span>Settings</span>
         </button>
       </div>
-    </nav>
+    </aside>
   );
 }
 

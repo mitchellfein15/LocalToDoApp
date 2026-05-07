@@ -5,6 +5,10 @@
   width: 100%;
 }
 
+.calendar-compact {
+  padding: 0;
+}
+
 .calendar-header {
   display: flex;
   justify-content: space-between;
@@ -69,6 +73,10 @@
   max-height: min(75vh, 900px);
   overflow-y: auto;
   overflow-x: hidden;
+}
+
+.calendar-compact .continuous-calendar {
+  max-height: 520px;
 }
 
 [data-theme="dark"] .calendar-grid {
