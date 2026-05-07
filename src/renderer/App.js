@@ -97,7 +97,6 @@ function App() {
         </div>
 
         <div className="dashboard-card card-calendar">
-          <h3 className="card-title">Calendar</h3>
           <Calendar
             compact
             onShowDetails={handleShowTodoDetails}

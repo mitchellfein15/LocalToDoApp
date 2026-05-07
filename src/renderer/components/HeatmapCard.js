@@ -58,8 +58,18 @@ function HeatmapCard() {
     return Object.values(countByDate).reduce((max, value) => Math.max(max, value), 0);
   }, [countByDate]);
 
-  const daySquares = useMemo(() => {
-    const days = [];
+  const monthsData = useMemo(() => {
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const months = Array.from({ length: 12 }, () => []);
+
+    // Add empty padding days so the 1st of each month starts on the correct day of the week
+    for (let month = 0; month < 12; month++) {
+      const firstDay = new Date(year, month, 1).getDay(); // 0 = Sunday
+      for (let i = 0; i < firstDay; i++) {
+        months[month].push(<div key={`empty-${month}-${i}`} className="heatmap-day empty" />);
+      }
+    }
+
     const start = getStartOfYear(year);
     const end = getEndOfYear(year);
     const cursor = new Date(start);
@@ -72,7 +82,7 @@ function HeatmapCard() {
         level = Math.min(4, Math.ceil((count / maxCount) * 4));
       }
 
-      days.push(
+      months[cursor.getMonth()].push(
         <div
           key={key}
           className={`heatmap-day level-${level}`}
@@ -82,7 +92,13 @@ function HeatmapCard() {
       cursor.setDate(cursor.getDate() + 1);
     }
 
-    return days;
+    // Render each month as a block
+    return months.map((days, index) => (
+      <div key={monthNames[index]} className="heatmap-month">
+        <span className="month-label">{monthNames[index]}</span>
+        <div className="heatmap-month-grid">{days}</div>
+      </div>
+    ));
   }, [countByDate, maxCount, year]);
 
   if (loading) {
@@ -91,7 +107,9 @@ function HeatmapCard() {
 
   return (
     <div className="heatmap-widget">
-      <div className="heatmap-grid">{daySquares}</div>
+      <div className="heatmap-months-container">
+        {monthsData}
+      </div>
       <div className="heatmap-legend">
         <span>Less</span>
         <div className="heatmap-day level-0" />
