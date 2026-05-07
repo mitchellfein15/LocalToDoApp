@@ -66,15 +66,15 @@ function WeatherCard() {
   return (
     <div className="weather-widget">
       <div className="weather-now">
-        <div className="weather-temp">{Math.round(weather.current.temperature_2m)}°C</div>
+        <div className="weather-temp">{(Math.round(weather.current.temperature_2m) * 1.8)+32}°F</div>
         <div className="weather-sub">Current</div>
       </div>
       <div className="weather-forecast">
         <span>
-          H: {Math.round(weather.daily.temperature_2m_max?.[0] || 0)}°C
+          L: {(Math.round(weather.daily.temperature_2m_min?.[0] * 1.8)+32)}°F
         </span>
         <span>
-          L: {Math.round(weather.daily.temperature_2m_min?.[0] || 0)}°C
+          H: {(Math.round(weather.daily.temperature_2m_max?.[0]* 1.8)+32)}°F
         </span>
       </div>
     </div>
