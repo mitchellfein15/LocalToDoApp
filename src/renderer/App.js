@@ -90,7 +90,6 @@ function App() {
           <h3 className="card-title">Calendar</h3>
           <Calendar
             compact
-            showTitle={false}
             onShowDetails={handleShowTodoDetails}
             onDelete={handleDeleteTodo}
             onUpdate={handleUpdateTodo}

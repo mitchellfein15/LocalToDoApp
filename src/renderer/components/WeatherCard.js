@@ -66,7 +66,7 @@ function WeatherCard() {
   return (
     <div className="weather-widget">
       <div className="weather-now">
-        <div className="weather-temp">{(Math.round(weather.current.temperature_2m) * 1.8)+32}°F</div>
+        <div className="weather-temp">{(Math.round(weather.current.temperature_2m * 1.8))+32}°F</div>
         <div className="weather-sub">Current</div>
       </div>
       <div className="weather-forecast">
