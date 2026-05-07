@@ -29,6 +29,14 @@ function Calendar({ onDelete, onUpdate, onShowDetails, compact = false, showTitl
     loadTodos();
   }, []);
 
+  useEffect(() => {
+    if (!loading) {
+      setTimeout(() => {
+        goToToday('auto'); 
+      }, 0);
+    }
+  }, [loading]);
+
   const loadTodos = async () => {
     try {
       setLoading(true);
@@ -220,7 +228,7 @@ function Calendar({ onDelete, onUpdate, onShowDetails, compact = false, showTitl
     }
   };
 
-  const goToToday = () => {
+  const goToToday = (behavior = 'smooth') => {
     const today = new Date();
     const todayKey = getMonthKey(today);
     const todayMonthElement = monthRefs.current.get(todayKey);
@@ -228,7 +236,7 @@ function Calendar({ onDelete, onUpdate, onShowDetails, compact = false, showTitl
 
     if (container && todayMonthElement) {
       const topOffset = todayMonthElement.offsetTop-150;
-      container.scrollTo({ top: Math.max(topOffset, 0), behavior: 'smooth' });
+      container.scrollTo({ top: Math.max(topOffset, 0), behavior });
       return;
     }
 
@@ -294,7 +302,7 @@ function Calendar({ onDelete, onUpdate, onShowDetails, compact = false, showTitl
       {showTitle && (
         <div className="calendar-header">
           <h2 className="calendar-title">Calendar</h2>
-          <button onClick={goToToday} className="today-btn">
+          <button onClick={() => goToToday('smooth')} className="today-btn">
             Today
           </button>
         </div>
