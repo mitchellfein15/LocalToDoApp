@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react';
 import ApiService from '../services/api';
 import './WidgetCards.css';
 
-function StatsSummaryCard() {
+function StatsSummaryCard({ refreshTrigger }) {
   const [stats, setStats] = useState({ openTodos: 0, completedYear: 0, notes: 0 });
 
   useEffect(() => {
     loadStats();
-  }, []);
+  }, [refreshTrigger]);
 
   const loadStats = async () => {
     try {

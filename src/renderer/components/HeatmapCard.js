@@ -17,7 +17,7 @@ function toDateKey(date) {
   return `${year}-${month}-${day}`;
 }
 
-function HeatmapCard() {
+function HeatmapCard({ refreshTrigger }) {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [year] = useState(new Date().getFullYear());
@@ -44,7 +44,7 @@ function HeatmapCard() {
     return () => {
       isMounted = false;
     };
-  }, [year]);
+  }, [year, refreshTrigger]);
 
   const countByDate = useMemo(() => {
     const map = {};
