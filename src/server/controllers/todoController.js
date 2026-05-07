@@ -17,12 +17,11 @@ class TodoController {
     db.all(sql, (err, rows) => {
       if (err) {
         res.status(500).json({ error: err.message });
-        return;
+      } else {
+        res.json(rows);
       }
-      res.json(rows);
+      db.close();
     });
-    
-    db.close();
   }
 
   // Get single todo by ID
@@ -33,16 +32,13 @@ class TodoController {
     db.get('SELECT * FROM todos WHERE id = ?', [id], (err, row) => {
       if (err) {
         res.status(500).json({ error: err.message });
-        return;
-      }
-      if (!row) {
+      } else if (!row) {
         res.status(404).json({ error: 'Todo not found' });
-        return;
+      } else {
+        res.json(row);
       }
-      res.json(row);
+      db.close();
     });
-    
-    db.close();
   }
 
   // Create new todo
@@ -52,6 +48,7 @@ class TodoController {
     
     if (!title) {
       res.status(400).json({ error: 'Title is required' });
+      db.close();
       return;
     }
     
@@ -61,6 +58,7 @@ class TodoController {
     db.run(sql, params, function(err) {
       if (err) {
         res.status(500).json({ error: err.message });
+        db.close();
         return;
       }
       
@@ -68,13 +66,12 @@ class TodoController {
       db.get('SELECT * FROM todos WHERE id = ?', [this.lastID], (err, row) => {
         if (err) {
           res.status(500).json({ error: err.message });
-          return;
+        } else {
+          res.status(201).json(row);
         }
-        res.status(201).json(row);
+        db.close();
       });
     });
-    
-    db.close();
   }
 
   // Update todo
@@ -85,6 +82,7 @@ class TodoController {
     
     if (!title) {
       res.status(400).json({ error: 'Title is required' });
+      db.close();
       return;
     }
     
@@ -101,11 +99,13 @@ class TodoController {
     db.run(sql, params, function(err) {
       if (err) {
         res.status(500).json({ error: err.message });
+        db.close();
         return;
       }
       
       if (this.changes === 0) {
         res.status(404).json({ error: 'Todo not found' });
+        db.close();
         return;
       }
       
@@ -113,13 +113,12 @@ class TodoController {
       db.get('SELECT * FROM todos WHERE id = ?', [id], (err, row) => {
         if (err) {
           res.status(500).json({ error: err.message });
-          return;
+        } else {
+          res.json(row);
         }
-        res.json(row);
+        db.close();
       });
     });
-    
-    db.close();
   }
 
   // Delete todo
@@ -130,20 +129,16 @@ class TodoController {
     db.run('DELETE FROM todos WHERE id = ?', [id], function(err) {
       if (err) {
         res.status(500).json({ error: err.message });
-        return;
-      }
-      
-      if (this.changes === 0) {
+      } else if (this.changes === 0) {
         res.status(404).json({ error: 'Todo not found' });
-        return;
+      } else {
+        res.json({ message: 'Todo deleted successfully' });
       }
-      
-      res.json({ message: 'Todo deleted successfully' });
+      db.close();
     });
-    
-    db.close();
   }
 
+  // Complete todo
   static completeTodo(req, res) {
     const db = TodoController.getDb();
     const { id } = req.params;
@@ -156,26 +151,27 @@ class TodoController {
       function(err) {
         if (err) {
           res.status(500).json({ error: err.message });
+          db.close();
           return;
         }
 
         if (this.changes === 0) {
           res.status(404).json({ error: 'Todo not found' });
+          db.close();
           return;
         }
 
         db.get('SELECT * FROM todos WHERE id = ?', [id], (selectErr, row) => {
           if (selectErr) {
             res.status(500).json({ error: selectErr.message });
-            return;
+          } else {
+            res.json(row);
           }
-          res.json(row);
+          db.close();
         });
       }
     );
-
-    db.close();
   }
 }
 
-module.exports = TodoController; 
+module.exports = TodoController;
