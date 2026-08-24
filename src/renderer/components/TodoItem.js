@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Edit, Delete, Check } from '../utils/mui-imports';
 import './TodoItem.css';
 
-function TodoItem({ todo, onDelete, onUpdate, onShowDetails, onComplete }) {
+function TodoItem({ todo, onDelete, onUpdate, onShowDetails, onComplete, compact = false }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(todo.title);
   const [editDescription, setEditDescription] = useState(todo.description || '');
@@ -79,7 +79,7 @@ function TodoItem({ todo, onDelete, onUpdate, onShowDetails, onComplete }) {
 
   if (isEditing) {
     return (
-      <div className="todo-item editing">
+      <div className={`todo-item editing ${compact ? 'todo-item-compact' : ''}`}>
         <div className="todo-edit-form">
           <input
             type="text"
@@ -117,7 +117,7 @@ function TodoItem({ todo, onDelete, onUpdate, onShowDetails, onComplete }) {
   }
 
   return (
-    <div className={`todo-item ${isCompleting ? 'completing' : ''}`}>
+    <div className={`todo-item ${compact ? 'todo-item-compact' : ''} ${isCompleting ? 'completing' : ''}`}>
       <div className="todo-content" onClick={() => onShowDetails && onShowDetails(todo)}>
         <div className="todo-details">
           <h3 className="todo-title">{todo.title}</h3>

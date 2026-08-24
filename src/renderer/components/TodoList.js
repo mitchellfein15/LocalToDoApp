@@ -142,6 +142,7 @@ function TodoList({ onShowDetails, onDelete, onUpdate, onTodosChange, compact = 
               onUpdate={handleUpdateTodo}
               onComplete={handleCompleteTodo}
               onShowDetails={onShowDetails}
+              compact={compact}
             />
           ))
         )}

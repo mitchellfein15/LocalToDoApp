@@ -7,7 +7,6 @@ import Settings from './components/Settings';
 import TodoDetailModal from './components/TodoDetailModal';
 import HeatmapCard from './components/HeatmapCard';
 import NotesCard from './components/NotesCard';
-import TimerWidget from './components/TimerWidget';
 import WeatherCard from './components/WeatherCard';
 import StatsSummaryCard from './components/StatsSummaryCard';
 import './App.css';
@@ -144,8 +143,6 @@ function App() {
           </main>
         </div>
 
-        <TimerWidget />
-        
         <Settings 
           open={showSettings}
           onClose={() => setShowSettings(false)}

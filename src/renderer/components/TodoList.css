@@ -10,8 +10,27 @@
 }
 
 .todo-list.todo-list-compact {
-  border-radius: 12px;
+  border-radius: 0;
   box-shadow: none;
+  max-width: none;
+  margin: 0;
+  background: transparent;
+}
+
+.todo-list-compact .todo-header {
+  padding: 0 0 12px;
+  background: none;
+  border-bottom: none;
+}
+
+[data-theme="dark"] .todo-list-compact {
+  background: transparent;
+  box-shadow: none;
+}
+
+[data-theme="dark"] .todo-list-compact .todo-header {
+  background: none;
+  border-bottom: none;
 }
 
 [data-theme="dark"] .todo-list {
@@ -85,6 +104,7 @@
 
 .todo-list-compact .todos-container {
   max-height: 500px;
+  padding: 4px 2px 8px;
 }
 
 [data-theme="dark"] .todos-container {

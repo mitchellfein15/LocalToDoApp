@@ -24,6 +24,7 @@ function Calendar({ onDelete, onUpdate, onShowDetails, refreshTrigger,compact = 
   const monthRefs = useRef(new Map());
   const prependSnapshotRef = useRef({ scrollTop: 0, scrollHeight: 0 });
   const isLoadingMoreRef = useRef(false);
+  const pendingTodayBehaviorRef = useRef('auto');
 
   useEffect(() => {
     loadTodos(refreshTrigger > 0); 
@@ -32,14 +33,6 @@ function Calendar({ onDelete, onUpdate, onShowDetails, refreshTrigger,compact = 
   useEffect(() => {
     loadTodos();
   }, []);
-
-  useEffect(() => {
-    if (!loading) {
-      setTimeout(() => {
-        goToToday('auto'); 
-      }, 0);
-    }
-  }, [loading]);
 
   const loadTodos = async (isSilent = false) => {
     try {
@@ -172,6 +165,30 @@ function Calendar({ onDelete, onUpdate, onShowDetails, refreshTrigger,compact = 
     return months;
   }, [monthStart, monthEnd]);
 
+  const scrollTodayIntoView = (behavior = 'smooth') => {
+    const container = scrollContainerRef.current;
+    const todayKey = getDateString(new Date());
+    const todayCell = container?.querySelector(`[data-date="${todayKey}"]`);
+
+    if (!container || !todayCell) {
+      return false;
+    }
+
+    const weekdaysHeight = container.querySelector('.sticky-weekdays')?.offsetHeight || 0;
+    const monthHeader = todayCell.closest('.calendar-month-section')?.querySelector('.month-section-header');
+    const stickyOffset = weekdaysHeight + (monthHeader?.offsetHeight || 0) + 8;
+    const nextTop =
+      container.scrollTop +
+      (todayCell.getBoundingClientRect().top - container.getBoundingClientRect().top) -
+      stickyOffset;
+
+    container.scrollTo({
+      top: Math.max(nextTop, 0),
+      behavior
+    });
+    return true;
+  };
+
   useLayoutEffect(() => {
     if (!pendingPrepend || !scrollContainerRef.current) {
       return;
@@ -185,6 +202,17 @@ function Calendar({ onDelete, onUpdate, onShowDetails, refreshTrigger,compact = 
     setPendingPrepend(false);
     isLoadingMoreRef.current = false;
   }, [monthsToRender, pendingPrepend]);
+
+  useLayoutEffect(() => {
+    if (loading || pendingTodayBehaviorRef.current == null) {
+      return;
+    }
+
+    const behavior = pendingTodayBehaviorRef.current;
+    if (scrollTodayIntoView(behavior)) {
+      pendingTodayBehaviorRef.current = null;
+    }
+  }, [loading, monthsToRender]);
 
   const extendMonthWindow = (direction) => {
     if (isLoadingMoreRef.current) {
@@ -233,17 +261,14 @@ function Calendar({ onDelete, onUpdate, onShowDetails, refreshTrigger,compact = 
   };
 
   const goToToday = (behavior = 'smooth') => {
-    const today = new Date();
-    const todayKey = getMonthKey(today);
-    const todayMonthElement = monthRefs.current.get(todayKey);
-    const container = scrollContainerRef.current;
+    pendingTodayBehaviorRef.current = behavior;
 
-    if (container && todayMonthElement) {
-      const topOffset = todayMonthElement.offsetTop-150;
-      container.scrollTo({ top: Math.max(topOffset, 0), behavior });
+    if (scrollTodayIntoView(behavior)) {
+      pendingTodayBehaviorRef.current = null;
       return;
     }
 
+    const today = new Date();
     setMonthStart(new Date(today.getFullYear(), today.getMonth() - INITIAL_MONTHS_BEFORE, 1));
     setMonthEnd(new Date(today.getFullYear(), today.getMonth() + INITIAL_MONTHS_AFTER, 1));
   };
@@ -265,6 +290,7 @@ function Calendar({ onDelete, onUpdate, onShowDetails, refreshTrigger,compact = 
         <div
           key={`${getMonthKey(monthDate)}-day-${day}`}
           className={`calendar-day ${isToday(date) ? 'today' : ''}`}
+          data-date={dateKey}
         >
           <div className="day-header">
             <span className="day-number">{day}</span>

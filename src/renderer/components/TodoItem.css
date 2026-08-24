@@ -90,6 +90,17 @@
   flex-shrink: 0;
 }
 
+.todo-item-compact {
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+
+.todo-item-compact .todo-actions {
+  margin-left: 8px;
+}
+
 .todo-item .edit-btn, .todo-item .delete-btn, .todo-item .complete-btn {
   background: none;
   border: none;

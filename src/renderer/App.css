@@ -81,11 +81,13 @@ body {
 }
 
 .card-todos {
-  grid-column: span 4;
+  grid-column: span 5;
+  min-width: 0;
 }
 
 .card-calendar {
-  grid-column: span 8;
+  grid-column: span 7;
+  min-width: 0;
 }
 
 .card-heatmap {
@@ -97,11 +99,11 @@ body {
 }
 
 .card-weather {
-  grid-column: span 3;
+  grid-column: span 6;
 }
 
 .card-stats {
-  grid-column: span 3;
+  grid-column: span 6;
 }
 
 .loading {
