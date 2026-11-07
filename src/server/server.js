@@ -6,7 +6,7 @@ const notesRoutes = require('./routes/notes');
 const statsRoutes = require('./routes/stats');
 
 const app = express();
-const PORT = 3008;
+const PORT = 8081;
 
 // Middleware
 app.use(cors());
