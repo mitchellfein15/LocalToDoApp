@@ -1,16 +1,75 @@
 .widget-loading {
-  color: #6c757d;
+  color: var(--app-text-muted);
   padding: 12px 0;
-}
-
-[data-theme="dark"] .widget-loading {
-  color: #b0b0b0;
 }
 
 .heatmap-widget {
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+
+.heatmap-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.heatmap-title {
+  margin: 0;
+}
+
+.heatmap-year-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.heatmap-year-btn {
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--app-border, #d4d8dd);
+  border-radius: var(--app-radius-sm, 8px);
+  background: var(--app-surface-muted, #f5f5f5);
+  color: var(--app-text, #333);
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.heatmap-year-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.heatmap-year-btn:not(:disabled):hover {
+  border-color: var(--app-accent, #667eea);
+  color: var(--app-accent, #667eea);
+}
+
+.heatmap-year-label {
+  min-width: 48px;
+  text-align: center;
+  font-weight: 600;
+  color: var(--app-text, #2c3e50);
+}
+
+.heatmap-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.heatmap-year-total {
+  font-size: 0.8rem;
+  color: var(--app-text-muted, #6c757d);
 }
 
 .heatmap-grid {
@@ -51,66 +110,7 @@
   align-items: center;
   gap: 6px;
   font-size: 12px;
-  color: #6c757d;
-}
-
-.notes-widget {
-  display: grid;
-  gap: 10px;
-}
-
-.notes-title-input,
-.notes-content-input {
-  width: 100%;
-  border: 1px solid #d4d8dd;
-  border-radius: 8px;
-  padding: 8px;
-  font-family: inherit;
-}
-
-.notes-content-input {
-  resize: vertical;
-}
-
-.notes-actions {
-  display: flex;
-  gap: 8px;
-  margin-top: 8px;
-}
-
-.notes-actions button,
-.note-item-actions button {
-  border: none;
-  border-radius: 8px;
-  padding: 6px 10px;
-  cursor: pointer;
-}
-
-.notes-list {
-  max-height: 320px;
-  overflow-y: auto;
-  display: grid;
-  gap: 8px;
-}
-
-.note-item {
-  border: 1px solid #e1e5e9;
-  border-radius: 10px;
-  padding: 10px;
-}
-
-.note-item h4 {
-  margin: 0 0 6px;
-}
-
-.note-item p {
-  margin: 0 0 8px;
-  white-space: pre-wrap;
-}
-
-.note-item-actions {
-  display: flex;
-  gap: 6px;
+  color: var(--app-text-muted);
 }
 
 .weather-widget {
@@ -122,12 +122,17 @@
 .weather-temp {
   font-size: 30px;
   font-weight: 700;
+  color: var(--app-text);
+}
+
+.weather-sub {
+  color: var(--app-text-muted);
 }
 
 .weather-forecast {
   display: flex;
   gap: 12px;
-  color: #6c757d;
+  color: var(--app-text-muted);
 }
 
 .stats-widget {
@@ -141,63 +146,12 @@
   align-items: center;
 }
 
-/* =========================================
-   Dark Mode Overrides for Widgets
-   ========================================= */
-
-/* --- Notes Form --- */
-[data-theme="dark"] .notes-title-input,
-[data-theme="dark"] .notes-content-input {
-  background-color: #2d2d2d; /* Matches dark card background */
-  color: #ffffff;            /* White text */
-  border-color: #555;        /* Darker border */
+.stat-line span {
+  color: var(--app-text-muted);
 }
 
-/* Adjust placeholder text color in dark mode */
-[data-theme="dark"] .notes-title-input::placeholder,
-[data-theme="dark"] .notes-content-input::placeholder {
-  color: #a0a0a0;
-}
-
-/* --- Saved Notes Items --- */
-[data-theme="dark"] .note-item {
-  border-color: #555;
-  background-color: #363636; /* Slightly lighter than the card for contrast */
-}
-
-[data-theme="dark"] .note-item h4,
-[data-theme="dark"] .note-item p {
-  color: #ffffff;
-}
-
-/* --- Buttons inside widgets --- */
-[data-theme="dark"] .notes-actions button,
-[data-theme="dark"] .note-item-actions button {
-  background-color: #444;
-  color: #ffffff;
-}
-
-[data-theme="dark"] .notes-actions button:hover,
-[data-theme="dark"] .note-item-actions button:hover {
-  background-color: #555;
-}
-
-/* --- Weather Widget --- */
-[data-theme="dark"] .weather-temp {
-  color: #b0b0b0;
-}
-
-[data-theme="dark"] .weather-sub {
-  color: #b0b0b0;
-}
-
-/* --- Quick Stats Widget --- */
-[data-theme="dark"] .stat-line span {
-  color: #b0b0b0; /* Light gray for the labels */
-}
-
-[data-theme="dark"] .stat-line strong {
-  color: #ffffff; /* Bright white for the numbers */
+.stat-line strong {
+  color: var(--app-text);
 }
 
 /* Container that holds all 12 months, allowing them to wrap to fill the card */
@@ -219,10 +173,7 @@
 .month-label {
   font-size: 0.8rem;
   font-weight: 600;
-}
-
-[data-theme="dark"] .month-label{
-  color: #ebedf0; 
+  color: var(--app-text);
 }
 
 .heatmap-month-grid {
@@ -255,8 +206,12 @@
   justify-content: center;
   gap: 4px;
   font-size: 0.8rem;
-  color: #666;
+  color: var(--app-text-muted);
   margin-top: auto;
+}
+
+[data-theme="dark"] .heatmap-year-label {
+  color: var(--app-text);
 }
 /* --- Dark Mode Overrides for Heatmap --- */
 

@@ -67,6 +67,10 @@ class ApiService {
     return this.request(`/stats/heatmap${query}`);
   }
 
+  static async getHeatmapYears() {
+    return this.request('/stats/years');
+  }
+
   static async resetStats() {
     return this.request('/stats/reset', {
       method: 'DELETE',

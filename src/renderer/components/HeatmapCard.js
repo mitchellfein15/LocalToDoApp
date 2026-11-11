@@ -18,9 +18,37 @@ function toDateKey(date) {
 }
 
 function HeatmapCard({ refreshTrigger }) {
+  const currentYear = new Date().getFullYear();
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [year] = useState(new Date().getFullYear());
+  const [year, setYear] = useState(currentYear);
+  const [availableYears, setAvailableYears] = useState([currentYear]);
+
+  useEffect(() => {
+    let isMounted = true;
+    const loadYears = async () => {
+      try {
+        const years = await ApiService.getHeatmapYears();
+        if (!isMounted) return;
+        const normalized = Array.isArray(years) && years.length > 0
+          ? years.map(Number).sort((a, b) => a - b)
+          : [currentYear];
+        if (!normalized.includes(currentYear)) {
+          normalized.push(currentYear);
+          normalized.sort((a, b) => a - b);
+        }
+        setAvailableYears(normalized);
+        setYear((prev) => (normalized.includes(prev) ? prev : currentYear));
+      } catch (error) {
+        console.error('Failed to load heatmap years', error);
+      }
+    };
+
+    loadYears();
+    return () => {
+      isMounted = false;
+    };
+  }, [refreshTrigger, currentYear]);
 
   useEffect(() => {
     let isMounted = true;
@@ -54,6 +82,11 @@ function HeatmapCard({ refreshTrigger }) {
     return map;
   }, [rows]);
 
+  const yearTotal = useMemo(
+    () => Object.values(countByDate).reduce((sum, count) => sum + count, 0),
+    [countByDate]
+  );
+
   const thresholds = useMemo(() => {
     const counts = Object.values(countByDate)
       .filter((count) => count > 0)
@@ -79,9 +112,8 @@ function HeatmapCard({ refreshTrigger }) {
     const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     const months = Array.from({ length: 12 }, () => []);
 
-    // Add empty padding days so the 1st of each month starts on the correct day of the week
     for (let month = 0; month < 12; month++) {
-      const firstDay = new Date(year, month, 1).getDay(); // 0 = Sunday
+      const firstDay = new Date(year, month, 1).getDay();
       for (let i = 0; i < firstDay; i++) {
         months[month].push(<div key={`empty-${month}-${i}`} className="heatmap-day empty" />);
       }
@@ -117,7 +149,6 @@ function HeatmapCard({ refreshTrigger }) {
       cursor.setDate(cursor.getDate() + 1);
     }
 
-    // Render each month as a block
     return months.map((days, index) => (
       <div key={monthNames[index]} className="heatmap-month">
         <span className="month-label">{monthNames[index]}</span>
@@ -126,24 +157,73 @@ function HeatmapCard({ refreshTrigger }) {
     ));
   }, [countByDate, thresholds, year]);
 
-  if (loading) {
-    return <div className="widget-loading">Loading heatmap...</div>;
-  }
+  const earliestYear = availableYears[0] ?? currentYear;
+  const latestYear = availableYears[availableYears.length - 1] ?? currentYear;
+  const canGoPrev = year > earliestYear;
+  const canGoNext = year < latestYear;
+
+  const shiftYear = (delta) => {
+    const currentIndex = availableYears.indexOf(year);
+    if (currentIndex === -1) {
+      setYear(currentYear);
+      return;
+    }
+    const next = availableYears[currentIndex + delta];
+    if (typeof next === 'number') {
+      setYear(next);
+    }
+  };
 
   return (
     <div className="heatmap-widget">
-      <div className="heatmap-months-container">
-        {monthsData}
+      <div className="heatmap-header">
+        <h3 className="card-title heatmap-title">Productivity Heatmap</h3>
+        <div className="heatmap-year-controls">
+          <button
+            type="button"
+            className="heatmap-year-btn"
+            onClick={() => shiftYear(-1)}
+            disabled={!canGoPrev}
+            aria-label="Previous year"
+          >
+            ‹
+          </button>
+          <span className="heatmap-year-label">{year}</span>
+          <button
+            type="button"
+            className="heatmap-year-btn"
+            onClick={() => shiftYear(1)}
+            disabled={!canGoNext}
+            aria-label="Next year"
+          >
+            ›
+          </button>
+        </div>
       </div>
-      <div className="heatmap-legend">
-        <span>Less</span>
-        <div className="heatmap-day level-0" />
-        <div className="heatmap-day level-1" />
-        <div className="heatmap-day level-2" />
-        <div className="heatmap-day level-3" />
-        <div className="heatmap-day level-4" />
-        <span>More</span>
-      </div>
+
+      {loading ? (
+        <div className="widget-loading">Loading heatmap...</div>
+      ) : (
+        <>
+          <div className="heatmap-months-container">
+            {monthsData}
+          </div>
+          <div className="heatmap-footer">
+            <span className="heatmap-year-total">
+              {yearTotal} completed in {year}
+            </span>
+            <div className="heatmap-legend">
+              <span>Less</span>
+              <div className="heatmap-day level-0" />
+              <div className="heatmap-day level-1" />
+              <div className="heatmap-day level-2" />
+              <div className="heatmap-day level-3" />
+              <div className="heatmap-day level-4" />
+              <span>More</span>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
