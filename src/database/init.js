@@ -1,9 +1,9 @@
 const sqlite3 = require('sqlite3').verbose();
 const { dbPath } = require('./dbConfig');
 
-function runStatement(db, sql) {
+function runStatement(db, sql, params = []) {
   return new Promise((resolve, reject) => {
-    db.run(sql, (err) => {
+    db.run(sql, params, (err) => {
       if (err) {
         reject(err);
         return;
@@ -11,6 +11,34 @@ function runStatement(db, sql) {
       resolve();
     });
   });
+}
+
+function getOne(db, sql, params = []) {
+  return new Promise((resolve, reject) => {
+    db.get(sql, params, (err, row) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      resolve(row);
+    });
+  });
+}
+
+async function backfillProductivityDays(db) {
+  const existing = await getOne(db, 'SELECT COUNT(*) AS total FROM productivity_days');
+  if (existing && Number(existing.total) > 0) {
+    return;
+  }
+
+  await runStatement(
+    db,
+    `INSERT INTO productivity_days (day, count)
+     SELECT DATE(completed_at), COUNT(*)
+     FROM todos
+     WHERE completed = 1 AND completed_at IS NOT NULL
+     GROUP BY DATE(completed_at)`
+  );
 }
 
 async function ensureTodoColumns(db) {
@@ -67,6 +95,16 @@ function initDatabase() {
             updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
           )`
         );
+
+        await runStatement(
+          db,
+          `CREATE TABLE IF NOT EXISTS productivity_days (
+            day TEXT PRIMARY KEY,
+            count INTEGER NOT NULL DEFAULT 0 CHECK (count >= 0)
+          )`
+        );
+
+        await backfillProductivityDays(db);
 
         resolve(db);
       } catch (dbError) {

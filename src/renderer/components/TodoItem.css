@@ -1,6 +1,6 @@
 .todo-item {
-  background: white;
-  border: 1px solid #e1e5e9;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
   border-radius: 12px;
   padding: 20px;
   margin-bottom: 16px;

@@ -81,7 +81,7 @@ function Settings({ open, onClose }) {
               Data Management
             </Typography>
             <Typography variant="body2" color="textSecondary" style={{ marginBottom: '10px' }}>
-              Resetting your statistics will clear your productivity heatmap and quick stats.
+              Resetting your statistics will clear the productivity heatmap for all years, including historic data, and quick stats.
             </Typography>
             <Button 
               variant="outlined" 
@@ -99,7 +99,7 @@ function Settings({ open, onClose }) {
         <DialogTitle>Reset Statistics?</DialogTitle>
         <DialogContent>
           <Typography>
-            Are you sure you want to reset all your statistics? This will clear your task completion history. <strong>This action cannot be undone.</strong>
+            Are you sure you want to reset all your statistics? This will clear your task completion history and all historic heatmap years. <strong>This action cannot be undone.</strong>
           </Typography>
         </DialogContent>
         <DialogActions>

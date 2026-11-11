@@ -4,34 +4,60 @@
   box-sizing: border-box;
 }
 
+:root {
+  --app-bg: #f5f5f5;
+  --app-surface: #ffffff;
+  --app-surface-muted: #f7f8fa;
+  --app-border: #e1e5e9;
+  --app-text: #2c3e50;
+  --app-text-muted: #6c757d;
+  --app-accent: #667eea;
+  --app-accent-strong: #764ba2;
+  --app-accent-soft: rgba(102, 126, 234, 0.12);
+  --app-danger: #d64545;
+  --app-danger-border: #f0b4b4;
+  --app-danger-soft: rgba(214, 69, 69, 0.1);
+  --app-radius: 14px;
+  --app-radius-sm: 8px;
+  --app-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+body[data-theme="dark"],
+[data-theme="dark"] {
+  --app-bg: #1a1a1a;
+  --app-surface: #2d2d2d;
+  --app-surface-muted: #343434;
+  --app-border: #555;
+  --app-text: #f0f0f0;
+  --app-text-muted: #b0b0b0;
+  --app-accent: #1976d2;
+  --app-accent-strong: #42a5f5;
+  --app-accent-soft: rgba(25, 118, 210, 0.18);
+  --app-danger: #ef6b6b;
+  --app-danger-border: #8a3f3f;
+  --app-danger-soft: rgba(239, 107, 107, 0.14);
+  --app-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #f5f5f5;
-  color: #333;
+  background-color: var(--app-bg);
+  color: var(--app-text);
   transition: background-color 0.3s ease, color 0.3s ease;
   overflow-x: hidden;
 }
 
-[data-theme="dark"] body {
-  background-color: #1a1a1a;
-  color: #ffffff;
-}
-
 .App {
   min-height: 100vh;
-  background-color: #f5f5f5;
+  background-color: var(--app-bg);
   transition: background-color 0.3s ease;
   width: 100%;
   overflow: hidden;
   display: flex;
-}
-
-[data-theme="dark"] .App {
-  background-color: #1a1a1a;
 }
 
 .app-content {
@@ -53,27 +79,21 @@ body {
 }
 
 .dashboard-card {
-  background: #ffffff;
-  border: 1px solid #e1e5e9;
-  border-radius: 14px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: var(--app-radius);
+  box-shadow: var(--app-shadow);
   padding: 16px;
-}
-
-[data-theme="dark"] .dashboard-card {
-  background: #2d2d2d;
-  border-color: #555;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 }
 
 .card-title {
   margin: 0 0 12px;
   font-size: 16px;
-  color: #2c3e50;
+  color: var(--app-text);
 }
 
-[data-theme="dark"] .card-title {
-  color: #f0f0f0;
+.card-notes .card-title {
+  margin-bottom: 10px;
 }
 
 .single-view-card {
@@ -110,11 +130,7 @@ body {
   text-align: center;
   padding: 40px;
   font-size: 18px;
-  color: #333;
-}
-
-[data-theme="dark"] .loading {
-  color: #ffffff;
+  color: var(--app-text);
 }
 
 .error-message {
@@ -143,16 +159,11 @@ body {
 .empty-state {
   text-align: center;
   padding: 60px 20px;
-  color: #666;
-  background: white;
-  border-radius: 12px;
+  color: var(--app-text-muted);
+  background: var(--app-surface);
+  border-radius: var(--app-radius);
   margin-top: 20px;
   transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-[data-theme="dark"] .empty-state {
-  color: #b0b0b0;
-  background: #2d2d2d;
 }
 
 .empty-state p {

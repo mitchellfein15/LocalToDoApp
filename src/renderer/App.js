@@ -106,8 +106,7 @@ function App() {
         </div>
 
         <div className="dashboard-card card-heatmap">
-          <h3 className="card-title">Productivity Heatmap</h3>
-          <HeatmapCard refreshTrigger={refreshTrigger} /> 
+          <HeatmapCard refreshTrigger={refreshTrigger} />
         </div>
 
         <div className="dashboard-card card-notes">

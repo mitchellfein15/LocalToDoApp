@@ -1,9 +1,9 @@
 .todo-list {
   max-width: 800px;
   margin: 0 auto;
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  background: var(--app-surface);
+  border-radius: var(--app-radius);
+  box-shadow: var(--app-shadow);
   overflow: hidden;
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
   width: 100%;
@@ -33,25 +33,14 @@
   border-bottom: none;
 }
 
-[data-theme="dark"] .todo-list {
-  background: #2d2d2d;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-}
-
 .todo-header {
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-  color: #2c3e50;
+  background: var(--app-surface-muted);
+  color: var(--app-text);
   padding: 24px 30px;
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  border-bottom: 1px solid #e1e5e9;
-}
-
-[data-theme="dark"] .todo-header {
-  background: linear-gradient(135deg, #404040 0%, #2d2d2d 100%);
-  color: white;
-  border-bottom-color: #555;
+  border-bottom: 1px solid var(--app-border);
 }
 
 .header-actions {
@@ -62,7 +51,7 @@
 }
 
 .add-todo-btn {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--app-accent) 0%, var(--app-accent-strong) 100%);
   color: white;
   border: none;
   padding: 14px 28px;
@@ -72,7 +61,7 @@
   cursor: pointer;
   transition: all 0.3s ease;
   white-space: nowrap;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4px 15px var(--app-accent-soft);
   position: relative;
   overflow: hidden;
 }

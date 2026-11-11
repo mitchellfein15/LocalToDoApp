@@ -1,5 +1,6 @@
 const sqlite3 = require('sqlite3').verbose();
 const { dbPath } = require('../../database/dbConfig');
+const { bumpDay, bumpToday, toDateKey } = require('../services/productivity');
 
 class TodoController {
   static getDb() {
@@ -28,7 +29,7 @@ class TodoController {
   static getTodoById(req, res) {
     const db = TodoController.getDb();
     const { id } = req.params;
-    
+
     db.get('SELECT * FROM todos WHERE id = ?', [id], (err, row) => {
       if (err) {
         res.status(500).json({ error: err.message });
@@ -45,24 +46,23 @@ class TodoController {
   static createTodo(req, res) {
     const db = TodoController.getDb();
     const { title, description, due_date } = req.body;
-    
+
     if (!title) {
       res.status(400).json({ error: 'Title is required' });
       db.close();
       return;
     }
-    
+
     const sql = 'INSERT INTO todos (title, description, due_date, completed, completed_at) VALUES (?, ?, ?, 0, NULL)';
     const params = [title, description || '', due_date || null];
-    
+
     db.run(sql, params, function(err) {
       if (err) {
         res.status(500).json({ error: err.message });
         db.close();
         return;
       }
-      
-      // Get the created todo
+
       db.get('SELECT * FROM todos WHERE id = ?', [this.lastID], (err, row) => {
         if (err) {
           res.status(500).json({ error: err.message });
@@ -79,44 +79,94 @@ class TodoController {
     const db = TodoController.getDb();
     const { id } = req.params;
     const { title, description, due_date, completed } = req.body;
-    
+
     if (!title) {
       res.status(400).json({ error: 'Title is required' });
       db.close();
       return;
     }
-    
+
     const isCompleted = Boolean(completed);
-    const sql = `UPDATE todos
-      SET title = ?, description = ?, due_date = ?, completed = ?, completed_at = CASE
-        WHEN ? = 1 AND completed_at IS NULL THEN CURRENT_TIMESTAMP
-        WHEN ? = 0 THEN NULL
-        ELSE completed_at
-      END, updated_at = CURRENT_TIMESTAMP
-      WHERE id = ?`;
-    const params = [title, description || '', due_date || null, isCompleted ? 1 : 0, isCompleted ? 1 : 0, isCompleted ? 1 : 0, id];
-    
-    db.run(sql, params, function(err) {
-      if (err) {
-        res.status(500).json({ error: err.message });
+
+    db.get('SELECT * FROM todos WHERE id = ?', [id], (fetchErr, existing) => {
+      if (fetchErr) {
+        res.status(500).json({ error: fetchErr.message });
         db.close();
         return;
       }
-      
-      if (this.changes === 0) {
+
+      if (!existing) {
         res.status(404).json({ error: 'Todo not found' });
         db.close();
         return;
       }
-      
-      // Get the updated todo
-      db.get('SELECT * FROM todos WHERE id = ?', [id], (err, row) => {
+
+      const wasCompleted = Boolean(existing.completed) && Boolean(existing.completed_at);
+      const previousDay = toDateKey(existing.completed_at);
+
+      const sql = `UPDATE todos
+        SET title = ?, description = ?, due_date = ?, completed = ?, completed_at = CASE
+          WHEN ? = 1 AND completed_at IS NULL THEN CURRENT_TIMESTAMP
+          WHEN ? = 0 THEN NULL
+          ELSE completed_at
+        END, updated_at = CURRENT_TIMESTAMP
+        WHERE id = ?`;
+      const params = [
+        title,
+        description || '',
+        due_date || null,
+        isCompleted ? 1 : 0,
+        isCompleted ? 1 : 0,
+        isCompleted ? 1 : 0,
+        id,
+      ];
+
+      db.run(sql, params, function(err) {
         if (err) {
           res.status(500).json({ error: err.message });
-        } else {
-          res.json(row);
+          db.close();
+          return;
         }
-        db.close();
+
+        const finish = (bumpErr) => {
+          if (bumpErr) {
+            res.status(500).json({ error: bumpErr.message });
+            db.close();
+            return;
+          }
+
+          db.get('SELECT * FROM todos WHERE id = ?', [id], (selectErr, row) => {
+            if (selectErr) {
+              res.status(500).json({ error: selectErr.message });
+            } else {
+              res.json(row);
+            }
+            db.close();
+          });
+        };
+
+        if (!wasCompleted && isCompleted) {
+          db.get('SELECT completed_at FROM todos WHERE id = ?', [id], (dayErr, updated) => {
+            if (dayErr) {
+              finish(dayErr);
+              return;
+            }
+            const day = toDateKey(updated && updated.completed_at);
+            if (day) {
+              bumpDay(db, day, 1, finish);
+            } else {
+              bumpToday(db, 1, finish);
+            }
+          });
+          return;
+        }
+
+        if (wasCompleted && !isCompleted) {
+          bumpDay(db, previousDay, -1, finish);
+          return;
+        }
+
+        finish(null);
       });
     });
   }
@@ -125,16 +175,48 @@ class TodoController {
   static deleteTodo(req, res) {
     const db = TodoController.getDb();
     const { id } = req.params;
-    
-    db.run('DELETE FROM todos WHERE id = ?', [id], function(err) {
-      if (err) {
-        res.status(500).json({ error: err.message });
-      } else if (this.changes === 0) {
-        res.status(404).json({ error: 'Todo not found' });
-      } else {
-        res.json({ message: 'Todo deleted successfully' });
+
+    db.get('SELECT * FROM todos WHERE id = ?', [id], (fetchErr, existing) => {
+      if (fetchErr) {
+        res.status(500).json({ error: fetchErr.message });
+        db.close();
+        return;
       }
-      db.close();
+
+      if (!existing) {
+        res.status(404).json({ error: 'Todo not found' });
+        db.close();
+        return;
+      }
+
+      const dayToDecrement =
+        Boolean(existing.completed) && existing.completed_at
+          ? toDateKey(existing.completed_at)
+          : null;
+
+      db.run('DELETE FROM todos WHERE id = ?', [id], function(err) {
+        if (err) {
+          res.status(500).json({ error: err.message });
+          db.close();
+          return;
+        }
+
+        const respond = (bumpErr) => {
+          if (bumpErr) {
+            res.status(500).json({ error: bumpErr.message });
+          } else {
+            res.json({ message: 'Todo deleted successfully' });
+          }
+          db.close();
+        };
+
+        if (dayToDecrement) {
+          bumpDay(db, dayToDecrement, -1, respond);
+          return;
+        }
+
+        respond(null);
+      });
     });
   }
 
@@ -143,34 +225,70 @@ class TodoController {
     const db = TodoController.getDb();
     const { id } = req.params;
 
-    db.run(
-      `UPDATE todos
-       SET completed = 1, completed_at = CURRENT_TIMESTAMP, updated_at = CURRENT_TIMESTAMP
-       WHERE id = ?`,
-      [id],
-      function(err) {
-        if (err) {
-          res.status(500).json({ error: err.message });
-          db.close();
-          return;
-        }
-
-        if (this.changes === 0) {
-          res.status(404).json({ error: 'Todo not found' });
-          db.close();
-          return;
-        }
-
-        db.get('SELECT * FROM todos WHERE id = ?', [id], (selectErr, row) => {
-          if (selectErr) {
-            res.status(500).json({ error: selectErr.message });
-          } else {
-            res.json(row);
-          }
-          db.close();
-        });
+    db.get('SELECT * FROM todos WHERE id = ?', [id], (fetchErr, existing) => {
+      if (fetchErr) {
+        res.status(500).json({ error: fetchErr.message });
+        db.close();
+        return;
       }
-    );
+
+      if (!existing) {
+        res.status(404).json({ error: 'Todo not found' });
+        db.close();
+        return;
+      }
+
+      const alreadyCounted = Boolean(existing.completed) && Boolean(existing.completed_at);
+
+      db.run(
+        `UPDATE todos
+         SET completed = 1, completed_at = CURRENT_TIMESTAMP, updated_at = CURRENT_TIMESTAMP
+         WHERE id = ?`,
+        [id],
+        function(err) {
+          if (err) {
+            res.status(500).json({ error: err.message });
+            db.close();
+            return;
+          }
+
+          const finish = (bumpErr) => {
+            if (bumpErr) {
+              res.status(500).json({ error: bumpErr.message });
+              db.close();
+              return;
+            }
+
+            db.get('SELECT * FROM todos WHERE id = ?', [id], (selectErr, row) => {
+              if (selectErr) {
+                res.status(500).json({ error: selectErr.message });
+              } else {
+                res.json(row);
+              }
+              db.close();
+            });
+          };
+
+          if (alreadyCounted) {
+            finish(null);
+            return;
+          }
+
+          db.get('SELECT completed_at FROM todos WHERE id = ?', [id], (dayErr, updated) => {
+            if (dayErr) {
+              finish(dayErr);
+              return;
+            }
+            const day = toDateKey(updated && updated.completed_at);
+            if (day) {
+              bumpDay(db, day, 1, finish);
+            } else {
+              bumpToday(db, 1, finish);
+            }
+          });
+        }
+      );
+    });
   }
 }
 
